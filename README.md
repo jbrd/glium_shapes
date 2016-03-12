@@ -16,7 +16,8 @@ Prefabricated shapes for the glium OpenGL wrapper.
   ```rust
   let cuboid = glium_shapes::cuboid::CuboidBuilder()
                .scale(2.0, 3.0, 4.0)
-               .build(display);
+               .build(display)
+               .expect("Failed to build cuboid shape");
   frame.draw( &cuboid, &cuboid, your_shader_program, your_uniforms, your_draw_params );
   ```
 

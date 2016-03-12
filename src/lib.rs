@@ -12,7 +12,8 @@
 //! let cuboid = glium_shapes::cuboid::CuboidBuilder::new()
 //!              .translate(0.0, 0.5, 0.0)
 //!              .scale(2.0, 3.0, 4.0)
-//!              .build(display);
+//!              .build(display)
+//!              .expect("Failed to build cuboid shape");
 //! ```
 //!
 //! # Drawing a shape
@@ -32,4 +33,5 @@ extern crate cgmath;
 extern crate glium;
 
 pub mod cuboid;
+pub mod errors;
 pub mod vertex;

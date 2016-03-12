@@ -4,6 +4,7 @@ extern crate cgmath;
 extern crate glium;
 
 use cgmath::{Angle,EuclideanVector,Matrix,Matrix3,Point3,Rotation3,SquareMatrix,Vector3,Vector4};
+use errors::ShapeCreationError;
 use vertex::Vertex;
 
 /// A polygonal `Cuboid` object.
@@ -137,21 +138,22 @@ impl CuboidBuilder {
     }
 
     /// Build a new `Cuboid` object.
-    pub fn build<F>(self, display: &F) -> Cuboid where F:glium::backend::Facade {
-        let vertices = glium::vertex::VertexBuffer::<Vertex>::new(
-            display, &self.build_vertices()
-        ).unwrap();
+    pub fn build<F>(self, display: &F) -> Result<Cuboid, ShapeCreationError>
+    where F:glium::backend::Facade {
+        let vertices = try!(glium::vertex::VertexBuffer::<Vertex>::new(
+            display, &try!(self.build_vertices())
+        ));
 
-        Cuboid {
+        Ok(Cuboid {
             vertices: glium::vertex::VertexBufferAny::from(vertices),
-        }
+        })
     }
 
     /// Build the cube vertices and return them in a vector.
     ///
     /// Useful if you wish to do other things with the vertices besides constructing
     /// a `Cuboid` object (e.g. unit testing, further processing, etc).
-    pub fn build_vertices(&self) -> Vec<Vertex> {
+    pub fn build_vertices(&self) -> Result<Vec<Vertex>, ShapeCreationError> {
 
         // Define lookup-tables used during construction of the cuboid geometry
         let index_lut = [
@@ -204,6 +206,6 @@ impl CuboidBuilder {
             }
         }
 
-        return vertices;
+        return Ok(vertices);
     }
 }
