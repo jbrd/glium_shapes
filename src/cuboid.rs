@@ -3,7 +3,7 @@
 extern crate cgmath;
 extern crate glium;
 
-use cgmath::{Angle,EuclideanVector,Matrix,Matrix3,Point3,Rotation3,SquareMatrix,Vector3,Vector4};
+use cgmath::*;
 use errors::ShapeCreationError;
 use vertex::Vertex;
 
@@ -207,5 +207,97 @@ impl CuboidBuilder {
         }
 
         return Ok(vertices);
+    }
+}
+
+#[test]
+pub fn ensure_default_cuboid_has_unit_dimensions() {
+    let vertices = CuboidBuilder::new()
+                   .build_vertices()
+                   .expect("Failed to build vertices");
+    for ref vertex in vertices {
+        assert_eq!(vertex.position[0].abs(), 0.5);
+        assert_eq!(vertex.position[1].abs(), 0.5);
+        assert_eq!(vertex.position[2].abs(), 0.5);
+    }
+}
+
+#[test]
+pub fn ensure_default_cuboid_has_centroid_at_origin() {
+    let vertices = CuboidBuilder::new()
+                   .build_vertices()
+                   .expect("Failed to build vertices");
+    let mut sum = Vector3::<f32>::zero();
+    for ref vertex in vertices {
+        sum = sum + Vector3::<f32>::from(vertex.position);
+    }
+    assert_eq!(sum, Vector3::<f32>::zero());
+}
+
+#[test]
+pub fn ensure_default_cuboid_has_outward_facing_normals() {
+    let vertices = CuboidBuilder::new()
+                   .scale(2.0, 2.0, 2.0)
+                   .build_vertices()
+                   .expect("Failed to build vertices");
+    for ref vertex in vertices {
+        let position = Vector3::<f32>::from(vertex.position);
+        let normal = Vector3::<f32>::from(vertex.normal);
+        let outside = position + normal;
+        assert!(outside.x.abs() >= position.x.abs());
+        assert!(outside.y.abs() >= position.y.abs());
+        assert!(outside.z.abs() >= position.z.abs());
+    }
+}
+
+#[test]
+pub fn ensure_default_cuboid_has_uvs_in_unit_range() {
+    let vertices = CuboidBuilder::new()
+                   .build_vertices()
+                   .expect("Failed to build vertices");
+    for ref vertex in vertices {
+        assert!(vertex.texcoord[0] >= 0.0);
+        assert!(vertex.texcoord[1] >= 0.0);
+        assert!(vertex.texcoord[0] <= 1.0);
+        assert!(vertex.texcoord[1] <= 1.0);
+    }
+}
+
+#[test]
+pub fn ensure_default_cuboid_has_ccw_triangles() {
+    let vertices = CuboidBuilder::new()
+                   .build_vertices()
+                   .expect("Failed to build vertices");
+    for chunk in vertices.chunks(3) {
+        let v0 = Vector3::<f32>::from(chunk[0].position);
+        let v1 = Vector3::<f32>::from(chunk[1].position);
+        let v2 = Vector3::<f32>::from(chunk[2].position);
+        let e0 = v1 - v0;
+        let e1 = v2 - v0;
+        let n = e0.cross(e1);
+        assert!(n.dot(v0) > 0.0);
+        assert!(n.dot(v1) > 0.0);
+        assert!(n.dot(v2) > 0.0);
+    }
+}
+
+#[test]
+pub fn ensure_default_cuboid_has_faceted_normals() {
+    let vertices = CuboidBuilder::new()
+                   .build_vertices()
+                   .expect("Failed to build vertices");
+    for chunk in vertices.chunks(3) {
+        let v0 = Vector3::<f32>::from(chunk[0].position);
+        let v1 = Vector3::<f32>::from(chunk[1].position);
+        let v2 = Vector3::<f32>::from(chunk[2].position);
+        let n0 = Vector3::<f32>::from(chunk[0].normal);
+        let n1 = Vector3::<f32>::from(chunk[1].normal);
+        let n2 = Vector3::<f32>::from(chunk[2].normal);
+        let e0 = v1 - v0;
+        let e1 = v2 - v0;
+        let n = e0.cross(e1);
+        assert_eq!(n, n0);
+        assert_eq!(n, n1);
+        assert_eq!(n, n2);
     }
 }
