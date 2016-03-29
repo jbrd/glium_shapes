@@ -32,6 +32,7 @@ extern crate cgmath;
 #[macro_use]
 extern crate glium;
 
+pub mod axes;
 pub mod cuboid;
 pub mod errors;
 pub mod vertex;
