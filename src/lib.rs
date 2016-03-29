@@ -8,7 +8,7 @@
 //! In the following example, we use a `CuboidBuilder` to construct a 2x3x4 `Cuboid`
 //! with its base at the origin:
 //!
-//! ```rust
+//! ```ignore
 //! let cuboid = glium_shapes::cuboid::CuboidBuilder::new()
 //!              .translate(0.0, 0.5, 0.0)
 //!              .scale(2.0, 3.0, 4.0)
@@ -22,7 +22,7 @@
 //! indices, such that you can pass them directly to the `glium::Surface::draw` method
 //! like so:
 //!
-//! ```rust
+//! ```ignore
 //! frame.draw( /*vertices=*/ &cuboid, /*indices=*/ &cuboid, program, uniforms, params );
 //! ```
 //!
