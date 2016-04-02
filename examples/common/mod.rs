@@ -27,7 +27,7 @@ pub fn setup<'a>() -> (GlutinFacade, ExampleData<'a>) {
 
     let display = glium::glutin::WindowBuilder::new()
         .with_dimensions(600, 600)
-        .with_title("Cuboid Example".into())
+        .with_title("Example Viewer".into())
         .build_glium()
         .expect("Failed to build glium display");
 
