@@ -3,6 +3,11 @@
 Prefabricated shapes for the glium OpenGL wrapper.
 
 
+## Requirements
+
+* Rust 1.7.0
+
+
 ## Getting Started
 
 - Import the `glium_shapes` crate:
@@ -40,7 +45,7 @@ Prefabricated shapes for the glium OpenGL wrapper.
 This module is still work-in-progress and hasn't reached an initial release yet. The current plan is to provide an initial 0.1.0 release with the following shapes:
 
 * Cuboid (done)
-* Axes
+* Axes (done)
 * Sphere
 * Cylinder
 * Cone
