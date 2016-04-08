@@ -48,7 +48,7 @@ pub fn setup<'a>() -> (GlutinFacade, ExampleData<'a>) {
                     uniform mat4 matrix;
 
                     void main() {
-                        gl_Position = matrix * vec4( position, 1.0 );
+                        gl_Position = matrix * vec4(position, 1.0);
                         v_normal = normal;
                     }
                 ",
@@ -61,7 +61,7 @@ pub fn setup<'a>() -> (GlutinFacade, ExampleData<'a>) {
                     out vec4 fragColor;
 
                     void main() {
-                        fragColor = vec4( ( v_normal + 1 ) / 2, 1.0 );
+                        fragColor = vec4((v_normal + 1) / 2, 1.0);
                     }
                 ",
             }
@@ -112,7 +112,7 @@ fn build_frame_uniforms<'a>(frame: &glium::Frame) -> FrameUniforms<'a> {
     let (width, height) = frame.get_dimensions();
 
     let projection = cgmath::PerspectiveFov::<f32> {
-        fovy: cgmath::Rad::<f32>::from( cgmath::Deg::<f32>::new( 90.0 ) ),
+        fovy: cgmath::Rad::<f32>::from(cgmath::Deg::<f32>::new(90.0)),
         aspect: width as f32 / height as f32,
         near: 1.0,
         far: 1000.0
