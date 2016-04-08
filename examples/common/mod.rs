@@ -27,6 +27,7 @@ pub fn setup<'a>() -> (GlutinFacade, ExampleData<'a>) {
 
     let display = glium::glutin::WindowBuilder::new()
         .with_dimensions(600, 600)
+        .with_depth_buffer(16)
         .with_title("Example Viewer".into())
         .build_glium()
         .expect("Failed to build glium display");
@@ -67,6 +68,11 @@ pub fn setup<'a>() -> (GlutinFacade, ExampleData<'a>) {
         ).expect("Failed to compile shader program"),
         draw_params: glium::DrawParameters {
             backface_culling: BackfaceCullingMode::CullClockwise,
+            depth: glium::Depth {
+                test: glium::draw_parameters::DepthTest::IfLess,
+                write: true,
+                .. Default::default()
+            },
             .. Default::default()
         }
     };
@@ -90,6 +96,7 @@ pub fn process_events(display: &GlutinFacade) -> bool {
 pub fn begin_frame<'a>(display: &GlutinFacade) -> (glium::Frame, FrameUniforms<'a>) {
     let mut frame = display.draw();
     frame.clear_color(0.1, 0.1, 0.1, 1.0);
+    frame.clear_depth(1.0);
     let uniforms = build_frame_uniforms(&frame);
     return (frame, uniforms);
 }
