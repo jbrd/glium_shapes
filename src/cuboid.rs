@@ -39,7 +39,7 @@ impl<'a> Into<glium::index::IndicesSource<'a>> for &'a Cuboid {
 /// The resultant geometry is constructed to suit OpenGL defaults - assuming
 /// a right-handed coordinate system, front-facing polygons are defined in
 /// counter-clock-wise order. Vertex normals point in the direction of their
-/// respective face (such that the cuboid appears faceted when lit). Vertex
+/// respective face (such that the shape appears faceted when lit). Vertex
 /// texture coordinates define a planar-projection on each face.
 pub struct CuboidBuilder {
     matrix: cgmath::Matrix4<f32>
@@ -149,7 +149,7 @@ impl CuboidBuilder {
         })
     }
 
-    /// Build the cube vertices and return them in a vector.
+    /// Build the shape vertices and return them in a vector.
     ///
     /// Useful if you wish to do other things with the vertices besides constructing
     /// a `Cuboid` object (e.g. unit testing, further processing, etc).
