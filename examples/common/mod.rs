@@ -111,19 +111,19 @@ pub fn end_frame(frame: glium::Frame) {
 fn build_frame_uniforms<'a>(frame: &glium::Frame) -> FrameUniforms<'a> {
     let (width, height) = frame.get_dimensions();
 
-    let projection = cgmath::PerspectiveFov::<f32> {
-        fovy: cgmath::Rad::<f32>::from(cgmath::Deg::<f32>::new(90.0)),
+    let projection = PerspectiveFov::<f32> {
+        fovy: Rad::<f32>::from(Deg::<f32>::new(90.0)),
         aspect: width as f32 / height as f32,
         near: 1.0,
         far: 1000.0
     };
 
-    let view = cgmath::Matrix4::<f32>::from_translation(
-        cgmath::Vector3::<f32>::new(0.0, 0.0, -10.0)
+    let view = Matrix4::<f32>::from_translation(
+        Vector3::<f32>::new(0.0, 0.0, -10.0)
     );
 
     let uniforms = uniform! {
-        matrix: (cgmath::Matrix4::<f32>::from(projection) * view).into()
+        matrix: (Matrix4::<f32>::from(projection) * view).into()
     };
 
     return uniforms;
