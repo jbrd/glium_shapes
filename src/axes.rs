@@ -173,7 +173,7 @@ impl AxesBuilder {
             for vert in 0..verts_per_axis {
                 let mut normal = Vector3::<f32>::new(0.0, 0.0, 0.0);
                 normal[axis] = 1.0;
-                let position = (normal * Vector3::<f32>::from_value(vert as f32)).extend(1.0);
+                let position = (normal * (vert as f32)).extend(1.0);
                 vertices.push(Vertex{
                     position: Point3::<f32>::from_homogeneous(self.matrix * position).into(),
                     normal: (normal_matrix * normal).normalize().into(),
@@ -237,7 +237,7 @@ pub fn ensure_axes_are_axis_aligned() {
         let p1 = Vector3::<f32>::from(chunk[1].position);
         let dir = p1 - p0;
         assert!(dir[0] == 1.0 || dir[1] == 1.0 || dir[2] == 1.0);
-        assert_eq!(dir.length(), 1.0);
+        assert_eq!(dir.magnitude(), 1.0);
     }
 }
 
