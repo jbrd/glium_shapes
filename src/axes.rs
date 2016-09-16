@@ -254,3 +254,21 @@ pub fn ensure_axes_normals_define_axis_direction() {
         assert_eq!(dir, Vector3::<f32>::from(chunk[1].normal));
     }
 }
+
+#[test]
+pub fn ensure_axes_uvs_are_in_correct_range() {
+    use std::f32;
+    let vertices = AxesBuilder::new()
+                   .build_vertices()
+                   .expect("Failed to build vertices");
+    let mut min = Vector2::<f32>::new(f32::MAX, f32::MAX);
+    let mut max = -min;
+    for ref vertex in vertices {
+        min.x = f32::min(min.x, vertex.texcoord[0]);
+        min.y = f32::min(min.y, vertex.texcoord[1]);
+        max.x = f32::max(max.x, vertex.texcoord[0]);
+        max.y = f32::max(max.y, vertex.texcoord[1]);
+    }
+    assert!(min == Vector2::<f32>::zero());
+    assert!(max == Vector2::<f32>::new(1.0, 2.0));
+}
