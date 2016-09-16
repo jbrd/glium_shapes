@@ -2,10 +2,16 @@
 
 Prefabricated shapes for the glium OpenGL wrapper.
 
+The following shapes are currently provided by the library:
+
+* Cuboid (done)
+* Axes (done)
+* Sphere (done)
+
 
 ## Requirements
 
-* Rust 1.7.0
+* Rust 1.8.0
 
 
 ## Getting Started
@@ -26,6 +32,14 @@ Prefabricated shapes for the glium OpenGL wrapper.
   frame.draw( &cuboid, &cuboid, your_shader_program, your_uniforms, your_draw_params );
   ```
 
+- Examples for all shapes are provided. Just run:
+
+  ```bash
+  cargo run --example axes
+  cargo run --example cuboid
+  cargo run --example sphere
+  ```
+
 
 ## Technical Details
 
@@ -42,13 +56,9 @@ Prefabricated shapes for the glium OpenGL wrapper.
 
 ## Development Status
 
-This module is still work-in-progress and hasn't reached an initial release yet. The current plan is to provide an initial 0.1.0 release with the following shapes:
-
-* Cuboid (done)
-* Axes (done)
-* Sphere
-* Cylinder
-* Cone
+Maintained but not actively developed. Will keep up-to-date with latest versions of rust
+and glium. Will add extra shapes when needed, and will happily accept contributions for
+extra shapes as well. Bugs will be fixed (please raise an issue if you find any!).
 
 
 ## Contributors
