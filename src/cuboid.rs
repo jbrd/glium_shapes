@@ -295,9 +295,9 @@ pub fn ensure_default_cuboid_has_faceted_normals() {
         let n2 = Vector3::<f32>::from(chunk[2].normal);
         let e0 = v1 - v0;
         let e1 = v2 - v0;
-        let n = e0.cross(e1);
-        assert_eq!(n, n0);
-        assert_eq!(n, n1);
-        assert_eq!(n, n2);
+        let n = e0.cross(e1).normalize();
+        assert_approx_eq!(n, n0);
+        assert_approx_eq!(n, n1);
+        assert_approx_eq!(n, n2);
     }
 }

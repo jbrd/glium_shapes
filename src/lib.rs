@@ -27,6 +27,8 @@
 //! ```
 //!
 //! The shader program, uniform buffers, and draw parameters are not provided by this library.
+
+#[macro_use]
 extern crate cgmath;
 
 #[macro_use]
@@ -35,4 +37,5 @@ extern crate glium;
 pub mod axes;
 pub mod cuboid;
 pub mod errors;
+pub mod sphere;
 pub mod vertex;

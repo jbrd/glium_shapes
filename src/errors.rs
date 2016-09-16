@@ -10,7 +10,36 @@ use std::error::Error;
 pub enum ShapeCreationError {
 
     /// The shape failed to build because vertex buffer could not be created.
-    VertexBufferCreationError(glium::vertex::BufferCreationError)
+    VertexBufferCreationError(glium::vertex::BufferCreationError),
+
+    /// The shape failed to build because the number of divisions in the u axis
+    /// is too small.
+    NotEnoughDivisionsInU,
+
+    /// The shape failed to build because the number of divisions in the v axis
+    /// is too small.
+    NotEnoughDivisionsInV,
+}
+
+impl std::error::Error for ShapeCreationError {
+    fn description(&self) -> &str {
+        match self {
+            &ShapeCreationError::VertexBufferCreationError(ref err) =>
+                err.description(),
+            &ShapeCreationError::NotEnoughDivisionsInU =>
+                "Not enough divisions in the u axis",
+            &ShapeCreationError::NotEnoughDivisionsInV =>
+                "Not enough divisions in the v axis",
+        }
+    }
+
+    fn cause(&self) -> Option<&Error> {
+        match self {
+            &ShapeCreationError::VertexBufferCreationError(ref error) =>
+                Some(error),
+            _ => None
+        }
+    }
 }
 
 impl From<glium::vertex::BufferCreationError> for ShapeCreationError {
@@ -21,25 +50,6 @@ impl From<glium::vertex::BufferCreationError> for ShapeCreationError {
 
 impl core::fmt::Display for ShapeCreationError {
     fn fmt(&self, fmt: &mut core::fmt::Formatter) -> core::fmt::Result {
-        match self {
-            &ShapeCreationError::VertexBufferCreationError(e) =>
-                e.fmt(fmt)
-        }
-    }
-}
-
-impl std::error::Error for ShapeCreationError {
-    fn description(&self) -> &str {
-        match self {
-            &ShapeCreationError::VertexBufferCreationError(_) =>
-                "Error while creating vertex buffer"
-        }
-    }
-
-    fn cause(&self) -> Option<&Error> {
-        match self {
-            &ShapeCreationError::VertexBufferCreationError(ref error) =>
-                Some(error)
-        }
+        write!(fmt, "{}", self.description())
     }
 }
