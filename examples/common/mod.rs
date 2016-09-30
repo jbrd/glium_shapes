@@ -28,7 +28,7 @@ pub fn setup<'a>() -> (GlutinFacade, ExampleData<'a>) {
     let display = glium::glutin::WindowBuilder::new()
         .with_dimensions(600, 600)
         .with_depth_buffer(16)
-        .with_title("Example Viewer".into())
+        .with_title("Example Viewer")
         .build_glium()
         .expect("Failed to build glium display");
 
@@ -112,7 +112,7 @@ fn build_frame_uniforms<'a>(frame: &glium::Frame) -> FrameUniforms<'a> {
     let (width, height) = frame.get_dimensions();
 
     let projection = PerspectiveFov::<f32> {
-        fovy: Rad::<f32>::from(Deg::<f32>::new(90.0)),
+        fovy: Rad::<f32>::from(Deg::<f32>(90.0)),
         aspect: width as f32 / height as f32,
         near: 1.0,
         far: 1000.0

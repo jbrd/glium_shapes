@@ -11,7 +11,7 @@ The following shapes are currently provided by the library:
 
 ## Requirements
 
-* Rust 1.8.0
+* Rust 1.11.0
 
 
 ## Getting Started

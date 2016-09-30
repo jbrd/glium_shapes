@@ -97,7 +97,7 @@ impl AxesBuilder {
     pub fn rotate_x(mut self, radians: f32) -> Self {
         self.matrix = cgmath::Matrix4::<f32>::from(
             cgmath::Matrix3::<f32>::from_angle_x(
-                cgmath::Rad::<f32>::new(radians)
+                cgmath::Rad::<f32>(radians)
             )
         ) * self.matrix;
         return self;
@@ -114,7 +114,7 @@ impl AxesBuilder {
     pub fn rotate_y(mut self, radians: f32) -> Self {
         self.matrix = cgmath::Matrix4::<f32>::from(
             cgmath::Matrix3::<f32>::from_angle_y(
-                cgmath::Rad::<f32>::new(radians)
+                cgmath::Rad::<f32>(radians)
             )
         ) * self.matrix;
         return self;
@@ -131,7 +131,7 @@ impl AxesBuilder {
     pub fn rotate_z(mut self, radians: f32) -> Self {
         self.matrix = cgmath::Matrix4::<f32>::from(
             cgmath::Matrix3::<f32>::from_angle_z(
-                cgmath::Rad::<f32>::new(radians)
+                cgmath::Rad::<f32>(radians)
             )
         ) * self.matrix;
         return self;
