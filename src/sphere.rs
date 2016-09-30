@@ -41,7 +41,7 @@ impl<'a> Into<glium::index::IndicesSource<'a>> for &'a Sphere {
 /// a right-handed coordinate system, front-facing polygons are defined in
 /// counter-clock-wise order. Vertex normals point in the direction of their
 /// respective face (such that the shape appears faceted when lit). Vertex
-/// texture coordinates define a planar-projection on each face.
+/// texture coordinates define a spherical-projection on the object.
 pub struct SphereBuilder {
     matrix: cgmath::Matrix4<f32>,
     u_divisions: usize,
