@@ -1,0 +1,8 @@
+[package]
+name = "glium_shapes"
+version = "0.1.0"
+authors = ["James Bird <jbrd@users.noreply.github.com>"]
+
+[dependencies]
+cgmath = "*"
+glium = "*"
