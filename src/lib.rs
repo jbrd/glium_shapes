@@ -23,7 +23,7 @@
 //! like so:
 //!
 //! ```ignore
-//! frame.draw( /*vertices=*/ &cuboid, /*indices=*/ &cuboid, program, uniforms, params );
+//! frame.draw(/*vertices=*/&cuboid, /*indices=*/&cuboid, program, uniforms, params);
 //! ```
 //!
 //! The shader program, uniform buffers, and draw parameters are not provided by this library.
