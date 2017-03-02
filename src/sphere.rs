@@ -3,10 +3,10 @@
 extern crate cgmath;
 extern crate glium;
 
-use cgmath::*;
 use errors::ShapeCreationError;
-use vertex::Vertex;
+use self::cgmath::*;
 use std::f32;
+use vertex::Vertex;
 
 /// A polygonal `Sphere` object.
 ///

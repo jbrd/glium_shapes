@@ -3,8 +3,8 @@
 extern crate cgmath;
 extern crate glium;
 
-use cgmath::*;
 use errors::ShapeCreationError;
+use self::cgmath::*;
 use vertex::Vertex;
 
 /// A polygonal `Cuboid` object.
