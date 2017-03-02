@@ -277,12 +277,13 @@ pub fn ensure_default_cuboid_has_ccw_triangles() {
         let v0 = Vector3::<f32>::from(chunk[0].position);
         let v1 = Vector3::<f32>::from(chunk[1].position);
         let v2 = Vector3::<f32>::from(chunk[2].position);
+        let eyepos = v0 + Vector3::<f32>::from(chunk[0].normal);
         let e0 = v1 - v0;
         let e1 = v2 - v0;
         let n = e0.cross(e1);
-        assert!(n.dot(v0) > 0.0);
-        assert!(n.dot(v1) > 0.0);
-        assert!(n.dot(v2) > 0.0);
+        assert!(n.dot(v0 - eyepos) <= 0.0);
+        assert!(n.dot(v1 - eyepos) <= 0.0);
+        assert!(n.dot(v2 - eyepos) <= 0.0);
     }
 }
 
