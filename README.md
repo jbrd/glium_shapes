@@ -38,6 +38,7 @@ The following shapes are currently provided by the library:
   ```bash
   cargo run --example axes
   cargo run --example cuboid
+  cargo run --example quad
   cargo run --example sphere
   ```
 
