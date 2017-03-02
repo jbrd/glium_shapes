@@ -1,6 +1,6 @@
 # glium_shapes
 
-Prefabricated shapes for the glium OpenGL wrapper for Rust.
+Prefabricated shapes for the Glium OpenGL library.
 
 The following shapes are currently provided by the library:
 

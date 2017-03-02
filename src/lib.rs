@@ -1,4 +1,4 @@
-//! Prefabricated shapes for the glium OpenGL wrapper.
+//! Prefabricated shapes for the Glium OpenGL library.
 //!
 //! # Building a shape
 //!
