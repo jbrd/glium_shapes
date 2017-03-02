@@ -37,5 +37,6 @@ extern crate glium;
 pub mod axes;
 pub mod cuboid;
 pub mod errors;
+pub mod quad;
 pub mod sphere;
 pub mod vertex;

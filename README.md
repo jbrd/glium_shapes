@@ -4,9 +4,10 @@ Prefabricated shapes for the glium OpenGL wrapper for Rust.
 
 The following shapes are currently provided by the library:
 
-* Cuboid (done)
-* Axes (done)
-* Sphere (done)
+* Axes
+* Cuboid
+* Quad
+* Sphere
 
 
 ## Requirements
