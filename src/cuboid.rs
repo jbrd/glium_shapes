@@ -301,8 +301,8 @@ pub fn ensure_default_cuboid_has_faceted_normals() {
         let e0 = v1 - v0;
         let e1 = v2 - v0;
         let n = e0.cross(e1).normalize();
-        assert_approx_eq!(n, n0);
-        assert_approx_eq!(n, n1);
-        assert_approx_eq!(n, n2);
+        assert_ulps_eq!(n, n0);
+        assert_ulps_eq!(n, n1);
+        assert_ulps_eq!(n, n2);
     }
 }

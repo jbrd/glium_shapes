@@ -313,7 +313,7 @@ pub fn ensure_default_sphere_is_unit_sphere() {
                    .build_vertices()
                    .expect("Failed to build vertices");
     for ref vertex in vertices {
-        assert_approx_eq!(Vector3::<f32>::from(vertex.position).magnitude(), 1.0);
+        assert_ulps_eq!(Vector3::<f32>::from(vertex.position).magnitude(), 1.0);
     }
 }
 
@@ -326,7 +326,7 @@ pub fn ensure_default_sphere_has_centroid_at_origin() {
     for ref vertex in vertices {
         sum = sum + Vector3::<f32>::from(vertex.position);
     }
-    assert_approx_eq_eps!(sum, Vector3::<f32>::zero(), 0.0001);
+    assert_ulps_eq!(sum, Vector3::<f32>::zero(), epsilon=0.0001);
 }
 
 #[test]
@@ -393,9 +393,9 @@ pub fn ensure_default_sphere_has_faceted_normals() {
         let e0 = v1 - v0;
         let e1 = v2 - v0;
         let n = e0.cross(e1).normalize();
-        assert_approx_eq!(n, n0);
-        assert_approx_eq!(n, n1);
-        assert_approx_eq!(n, n2);
+        assert_ulps_eq!(n, n0, epsilon=0.0001);
+        assert_ulps_eq!(n, n1, epsilon=0.0001);
+        assert_ulps_eq!(n, n2, epsilon=0.0001);
     }
 }
 
@@ -424,7 +424,7 @@ pub fn ensure_default_sphere_has_planar_quads() {
 
             let n0 = (tri0[1] - tri0[0]).cross(tri0[2] - tri0[0]).normalize();
             let n1 = (tri1[1] - tri1[0]).cross(tri1[2] - tri1[0]).normalize();
-            assert_approx_eq!(n0, n1);
+            assert_ulps_eq!(n0, n1, epsilon=0.0001);
         }
     }
 }
