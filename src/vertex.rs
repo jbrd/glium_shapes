@@ -3,7 +3,7 @@
 extern crate glium;
 
 /// The vertex structure shared across all shapes.
-#[derive(Copy,Clone)]
+#[derive(Copy,Clone,Debug)]
 pub struct Vertex {
     pub position: [f32; 3],
     pub normal: [f32; 3],
