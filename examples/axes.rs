@@ -14,9 +14,9 @@ fn main() {
     // shape. In this case we will create an axes locator with its origin
     // at (0.0, 4.0, 0.0)
     let axes = glium_shapes::axes::AxesBuilder::new()
-               .translate(0.0, 4.0, 0.0)
-               .build(&display)
-               .expect("Failed to build axes shape");
+        .translate(0.0, 4.0, 0.0)
+        .build(&display)
+        .expect("Failed to build axes shape");
 
     // Loop until the user closes the display window.
     while common::process_events(&display) {
@@ -27,7 +27,7 @@ fn main() {
         // KEY POINT: Draw the axes shape by passing it as a source
         // of both vertices and indices to glium.
         frame.draw(&axes, &axes, &data.program, &uniforms, &data.draw_params)
-             .expect("Failed to draw axes shape");
+            .expect("Failed to draw axes shape");
 
         // Finish the frame.
         common::end_frame(frame);

@@ -19,9 +19,9 @@ fn main() {
     // so we rotate the quad 180 degrees in Y to face the camera such
     // that it doesn't get backface culled.
     let quad = glium_shapes::quad::QuadBuilder::new()
-               .rotate_y(std::f32::consts::PI)
-               .build(&display)
-               .expect("Failed to build quad shape");
+        .rotate_y(std::f32::consts::PI)
+        .build(&display)
+        .expect("Failed to build quad shape");
 
     // Loop until the user closes the display window.
     while common::process_events(&display) {
@@ -32,7 +32,7 @@ fn main() {
         // KEY POINT: Draw the quad shape by passing it as a source
         // of both vertices and indices to glium.
         frame.draw(&quad, &quad, &data.program, &uniforms, &data.draw_params)
-             .expect("Failed to draw quad shape");
+            .expect("Failed to draw quad shape");
 
         // Finish the frame.
         common::end_frame(frame);

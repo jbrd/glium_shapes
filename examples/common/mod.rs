@@ -10,12 +10,11 @@ use self::glium::backend::glutin_backend::GlutinFacade;
 
 /// Shared data used in the examples.
 pub struct ExampleData<'a> {
-
     /// The shader program used to render the shapes.
     pub program: glium::Program,
 
     /// The draw parameter state used to render the shapes.
-    pub draw_params: glium::DrawParameters<'a>
+    pub draw_params: glium::DrawParameters<'a>,
 }
 
 /// A type to represent the frame-varying uniforms in the examples. At
@@ -65,16 +64,17 @@ pub fn setup<'a>() -> (GlutinFacade, ExampleData<'a>) {
                     }
                 ",
             }
-        ).expect("Failed to compile shader program"),
+        )
+            .expect("Failed to compile shader program"),
         draw_params: glium::DrawParameters {
             backface_culling: BackfaceCullingMode::CullClockwise,
             depth: glium::Depth {
                 test: glium::draw_parameters::DepthTest::IfLess,
                 write: true,
-                .. Default::default()
+                ..Default::default()
             },
-            .. Default::default()
-        }
+            ..Default::default()
+        },
     };
     return (display, data);
 }
@@ -85,7 +85,7 @@ pub fn process_events(display: &GlutinFacade) -> bool {
     for event in display.poll_events() {
         match event {
             glium::glutin::Event::Closed => return false,
-            _ => continue
+            _ => continue,
         }
     }
     return true;
@@ -115,12 +115,10 @@ fn build_frame_uniforms<'a>(frame: &glium::Frame) -> FrameUniforms<'a> {
         fovy: Rad::<f32>::from(Deg::<f32>(90.0)),
         aspect: width as f32 / height as f32,
         near: 1.0,
-        far: 1000.0
+        far: 1000.0,
     };
 
-    let view = Matrix4::<f32>::from_translation(
-        Vector3::<f32>::new(0.0, 0.0, -10.0)
-    );
+    let view = Matrix4::<f32>::from_translation(Vector3::<f32>::new(0.0, 0.0, -10.0));
 
     let uniforms = uniform! {
         matrix: (Matrix4::<f32>::from(projection) * view).into()

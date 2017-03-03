@@ -11,7 +11,7 @@ use vertex::Vertex;
 ///
 /// This object is constructed using a `CuboidBuilder` object.
 pub struct Cuboid {
-    vertices: glium::vertex::VertexBufferAny
+    vertices: glium::vertex::VertexBufferAny,
 }
 
 /// Allows a `Cuboid` object to be passed as a source of vertices.
@@ -24,8 +24,8 @@ impl<'a> glium::vertex::IntoVerticesSource<'a> for &'a Cuboid {
 /// Allows a `Cuboid` object to be passed as a source of indices.
 impl<'a> Into<glium::index::IndicesSource<'a>> for &'a Cuboid {
     fn into(self) -> glium::index::IndicesSource<'a> {
-        return glium::index::IndicesSource::NoIndices{
-            primitives: glium::index::PrimitiveType::TrianglesList
+        return glium::index::IndicesSource::NoIndices {
+            primitives: glium::index::PrimitiveType::TrianglesList,
         };
     }
 }
@@ -42,19 +42,16 @@ impl<'a> Into<glium::index::IndicesSource<'a>> for &'a Cuboid {
 /// respective face (such that the shape appears faceted when lit). Vertex
 /// texture coordinates define a planar-projection on each face.
 pub struct CuboidBuilder {
-    matrix: cgmath::Matrix4<f32>
+    matrix: cgmath::Matrix4<f32>,
 }
 
 impl Default for CuboidBuilder {
     fn default() -> Self {
-        CuboidBuilder {
-            matrix: cgmath::Matrix4::<f32>::identity()
-        }
+        CuboidBuilder { matrix: cgmath::Matrix4::<f32>::identity() }
     }
 }
 
 impl CuboidBuilder {
-
     /// Create a new `CuboidBuilder` object.
     pub fn new() -> CuboidBuilder {
         Default::default()
@@ -81,7 +78,7 @@ impl CuboidBuilder {
     /// one should prefer to share as few shapes as possible across multiple
     /// instances, and instead rely on uniform constants in the shader and/or
     /// instanced drawing.
-    pub fn translate(mut self, x: f32, y:f32, z: f32) -> Self {
+    pub fn translate(mut self, x: f32, y: f32, z: f32) -> Self {
         self.matrix = cgmath::Matrix4::from_translation([x, y, z].into()) * self.matrix;
         return self;
     }
@@ -139,14 +136,11 @@ impl CuboidBuilder {
 
     /// Build a new `Cuboid` object.
     pub fn build<F>(self, display: &F) -> Result<Cuboid, ShapeCreationError>
-    where F:glium::backend::Facade {
-        let vertices = try!(glium::vertex::VertexBuffer::<Vertex>::new(
-            display, &try!(self.build_vertices())
-        ));
-
-        Ok(Cuboid {
-            vertices: glium::vertex::VertexBufferAny::from(vertices),
-        })
+        where F: glium::backend::Facade
+    {
+        let vertices = &try!(self.build_vertices());
+        let vbuffer = try!(glium::vertex::VertexBuffer::<Vertex>::new(display, vertices));
+        Ok(Cuboid { vertices: glium::vertex::VertexBufferAny::from(vbuffer) })
     }
 
     /// Build the shape vertices and return them in a vector.
@@ -157,51 +151,45 @@ impl CuboidBuilder {
 
         // Define lookup-tables used during construction of the cuboid geometry
         let index_lut = [
-            0, 4, 1, 5,
-            6, 2, 7, 3,
-            0, 2, 4, 6,
-            5, 7, 1, 3,
-            2, 0, 3, 1,
-            4, 6, 5, 7,
+            0, 4, 1, 5, // -X
+            6, 2, 7, 3, // +X
+            0, 2, 4, 6, // -Y
+            5, 7, 1, 3, // +Y
+            2, 0, 3, 1, // -Z
+            4, 6, 5, 7, // +Z
         ];
         let poly_lut = [0, 1, 2, 2, 1, 3];
         let num_sides = 6;
         let verts_per_side = 6;
 
         // Compute the normal transformation matrix.
-        let normal_matrix = Matrix3::<f32>::from_cols(
-            self.matrix.x.truncate(),
-            self.matrix.y.truncate(),
-            self.matrix.z.truncate()
-        ).invert().unwrap_or(Matrix3::<f32>::identity()).transpose();
+        let normal_matrix = Matrix3::<f32>::from_cols(self.matrix.x.truncate(),
+                                                      self.matrix.y.truncate(),
+                                                      self.matrix.z.truncate())
+            .invert()
+            .unwrap_or(Matrix3::<f32>::identity())
+            .transpose();
 
         // Generate cuboid vertices.
-        let mut vertices = Vec::<Vertex>::with_capacity(
-            verts_per_side * num_sides
-        );
+        let mut vertices = Vec::<Vertex>::with_capacity(verts_per_side * num_sides);
 
         for side in 0..num_sides {
 
             // Compute side normal.
             let mut normal = Vector3::<f32>::new(0.0, 0.0, 0.0);
-            normal[ side / 2 ] = ( ( ( side % 2 ) * 2 ) as f32 ) - 1.0;
+            normal[side / 2] = (((side % 2) * 2) as f32) - 1.0;
 
             // Build side vertices.
             for vert in 0..verts_per_side {
-
-                let coord = index_lut[ poly_lut[ vert ] + ( side * 4 ) ];
-                vertices.push(Vertex{
-                    position: Point3::<f32>::from_homogeneous(self.matrix * Vector4::<f32>::new(
-                        (((coord & 2) - 1) as f32) * 0.5,
-                        (((coord & 1) * 2 - 1) as f32) * 0.5,
-                        ((((coord >> 1) & 2) - 1) as f32) * 0.5,
-                        1.0
-                    )).into(),
+                let coord = index_lut[poly_lut[vert] + (side * 4)];
+                let vpos = Vector4::<f32>::new((((coord & 2) - 1) as f32) * 0.5,
+                                               (((coord & 1) * 2 - 1) as f32) * 0.5,
+                                               ((((coord >> 1) & 2) - 1) as f32) * 0.5,
+                                               1.0);
+                vertices.push(Vertex {
+                    position: Point3::<f32>::from_homogeneous(self.matrix * vpos).into(),
                     normal: (normal_matrix * normal).normalize().into(),
-                    texcoord: [
-                        ( poly_lut[ vert ] % 2 ) as f32,
-                        ( poly_lut[ vert ] / 2 ) as f32,
-                    ],
+                    texcoord: [(poly_lut[vert] % 2) as f32, (poly_lut[vert] / 2) as f32],
                 });
             }
         }
@@ -213,8 +201,8 @@ impl CuboidBuilder {
 #[test]
 pub fn ensure_default_cuboid_has_unit_dimensions() {
     let vertices = CuboidBuilder::new()
-                   .build_vertices()
-                   .expect("Failed to build vertices");
+        .build_vertices()
+        .expect("Failed to build vertices");
     for ref vertex in vertices {
         assert_eq!(vertex.position[0].abs(), 0.5);
         assert_eq!(vertex.position[1].abs(), 0.5);
@@ -225,8 +213,8 @@ pub fn ensure_default_cuboid_has_unit_dimensions() {
 #[test]
 pub fn ensure_default_cuboid_has_centroid_at_origin() {
     let vertices = CuboidBuilder::new()
-                   .build_vertices()
-                   .expect("Failed to build vertices");
+        .build_vertices()
+        .expect("Failed to build vertices");
     let mut sum = Vector3::<f32>::zero();
     for ref vertex in vertices {
         sum = sum + Vector3::<f32>::from(vertex.position);
@@ -237,9 +225,9 @@ pub fn ensure_default_cuboid_has_centroid_at_origin() {
 #[test]
 pub fn ensure_default_cuboid_has_outward_facing_normals() {
     let vertices = CuboidBuilder::new()
-                   .scale(2.0, 2.0, 2.0)
-                   .build_vertices()
-                   .expect("Failed to build vertices");
+        .scale(2.0, 2.0, 2.0)
+        .build_vertices()
+        .expect("Failed to build vertices");
     for ref vertex in vertices {
         let position = Vector3::<f32>::from(vertex.position);
         let normal = Vector3::<f32>::from(vertex.normal);
@@ -254,8 +242,8 @@ pub fn ensure_default_cuboid_has_outward_facing_normals() {
 pub fn ensure_default_cuboid_has_uvs_in_unit_range() {
     use std::f32;
     let vertices = CuboidBuilder::new()
-                   .build_vertices()
-                   .expect("Failed to build vertices");
+        .build_vertices()
+        .expect("Failed to build vertices");
     let mut min = Vector2::<f32>::new(f32::MAX, f32::MAX);
     let mut max = -min;
     for ref vertex in vertices {
@@ -271,8 +259,8 @@ pub fn ensure_default_cuboid_has_uvs_in_unit_range() {
 #[test]
 pub fn ensure_default_cuboid_has_ccw_triangles() {
     let vertices = CuboidBuilder::new()
-                   .build_vertices()
-                   .expect("Failed to build vertices");
+        .build_vertices()
+        .expect("Failed to build vertices");
     for chunk in vertices.chunks(3) {
         let v0 = Vector3::<f32>::from(chunk[0].position);
         let v1 = Vector3::<f32>::from(chunk[1].position);
@@ -290,8 +278,8 @@ pub fn ensure_default_cuboid_has_ccw_triangles() {
 #[test]
 pub fn ensure_default_cuboid_has_faceted_normals() {
     let vertices = CuboidBuilder::new()
-                   .build_vertices()
-                   .expect("Failed to build vertices");
+        .build_vertices()
+        .expect("Failed to build vertices");
     for chunk in vertices.chunks(3) {
         let v0 = Vector3::<f32>::from(chunk[0].position);
         let v1 = Vector3::<f32>::from(chunk[1].position);

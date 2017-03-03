@@ -14,10 +14,10 @@ fn main() {
     // shape. In this case we will create a 2x3x4 cuboid with its base
     // located at the origin.
     let cuboid = glium_shapes::cuboid::CuboidBuilder::new()
-                 .scale(2.0, 3.0, 4.0)
-                 .translate(0.0, 1.5, 0.0)
-                 .build(&display)
-                 .expect("Failed to build cuboid shape");
+        .scale(2.0, 3.0, 4.0)
+        .translate(0.0, 1.5, 0.0)
+        .build(&display)
+        .expect("Failed to build cuboid shape");
 
     // Loop until the user closes the display window.
     while common::process_events(&display) {
@@ -27,8 +27,12 @@ fn main() {
 
         // KEY POINT: Draw the cuboid shape by passing it as a source
         // of both vertices and indices to glium.
-        frame.draw(&cuboid, &cuboid, &data.program, &uniforms, &data.draw_params)
-             .expect("Failed to draw cuboid shape");
+        frame.draw(&cuboid,
+                  &cuboid,
+                  &data.program,
+                  &uniforms,
+                  &data.draw_params)
+            .expect("Failed to draw cuboid shape");
 
         // Finish the frame.
         common::end_frame(frame);

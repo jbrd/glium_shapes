@@ -7,7 +7,7 @@ extern crate glium;
 pub struct Vertex {
     pub position: [f32; 3],
     pub normal: [f32; 3],
-    pub texcoord: [f32; 2]
+    pub texcoord: [f32; 2],
 }
 
 implement_vertex!(Vertex, position, normal, texcoord);

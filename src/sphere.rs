@@ -12,7 +12,7 @@ use vertex::Vertex;
 ///
 /// This object is constructed using a `SphereBuilder` object.
 pub struct Sphere {
-    vertices: glium::vertex::VertexBufferAny
+    vertices: glium::vertex::VertexBufferAny,
 }
 
 /// Allows a `Sphere` object to be passed as a source of vertices.
@@ -25,8 +25,8 @@ impl<'a> glium::vertex::IntoVerticesSource<'a> for &'a Sphere {
 /// Allows a `Sphere` object to be passed as a source of indices.
 impl<'a> Into<glium::index::IndicesSource<'a>> for &'a Sphere {
     fn into(self) -> glium::index::IndicesSource<'a> {
-        return glium::index::IndicesSource::NoIndices{
-            primitives: glium::index::PrimitiveType::TrianglesList
+        return glium::index::IndicesSource::NoIndices {
+            primitives: glium::index::PrimitiveType::TrianglesList,
         };
     }
 }
@@ -59,7 +59,6 @@ impl Default for SphereBuilder {
 }
 
 impl SphereBuilder {
-
     /// Create a new `SphereBuilder` object.
     pub fn new() -> SphereBuilder {
         Default::default()
@@ -95,7 +94,7 @@ impl SphereBuilder {
     /// one should prefer to share as few shapes as possible across multiple
     /// instances, and instead rely on uniform constants in the shader and/or
     /// instanced drawing.
-    pub fn translate(mut self, x: f32, y:f32, z: f32) -> Self {
+    pub fn translate(mut self, x: f32, y: f32, z: f32) -> Self {
         self.matrix = cgmath::Matrix4::from_translation([x, y, z].into()) * self.matrix;
         return self;
     }
@@ -153,14 +152,12 @@ impl SphereBuilder {
 
     /// Build a new `Sphere` object.
     pub fn build<F>(self, display: &F) -> Result<Sphere, ShapeCreationError>
-    where F:glium::backend::Facade {
-        let vertices = try!(glium::vertex::VertexBuffer::<Vertex>::new(
-            display, &try!(self.build_vertices())
-        ));
+        where F: glium::backend::Facade
+    {
+        let vertices =
+            try!(glium::vertex::VertexBuffer::<Vertex>::new(display, &try!(self.build_vertices())));
 
-        Ok(Sphere {
-            vertices: glium::vertex::VertexBufferAny::from(vertices),
-        })
+        Ok(Sphere { vertices: glium::vertex::VertexBufferAny::from(vertices) })
     }
 
     /// Build the shape vertices and return them in a vector.
@@ -187,76 +184,72 @@ impl SphereBuilder {
             [val.sin(), val.cos()]
         }
 
-        let u_tab = (0..(self.u_divisions+1)).map(
-            |x| sin_cos(((x % self.u_divisions) as f32) * u_angle)
-        ).collect::<Vec<[f32; 2]>>();
+        let u_tab = (0..(self.u_divisions + 1))
+            .map(|x| sin_cos(((x % self.u_divisions) as f32) * u_angle))
+            .collect::<Vec<[f32; 2]>>();
 
-        let v_tab = (0..(self.v_divisions+1)).map(
-            |x| sin_cos((x as f32) * v_angle)
-        ).collect::<Vec<[f32; 2]>>();
+        let v_tab = (0..(self.v_divisions + 1))
+            .map(|x| sin_cos((x as f32) * v_angle))
+            .collect::<Vec<[f32; 2]>>();
 
         let indices = [0, 1, 2, 2, 1, 3];
 
         // Compute the normal transformation matrix.
-        let normal_matrix = Matrix3::<f32>::from_cols(
-            self.matrix.x.truncate(),
-            self.matrix.y.truncate(),
-            self.matrix.z.truncate()
-        ).invert().unwrap_or(Matrix3::<f32>::identity()).transpose();
+        let normal_matrix = Matrix3::<f32>::from_cols(self.matrix.x.truncate(),
+                                                      self.matrix.y.truncate(),
+                                                      self.matrix.z.truncate())
+            .invert()
+            .unwrap_or(Matrix3::<f32>::identity())
+            .transpose();
 
         // Build vertex array.
         let total_num_verts = self.num_vertices();
-        let mut vertices = Vec::<Vertex>::with_capacity(
-            total_num_verts
-        );
+        let mut vertices = Vec::<Vertex>::with_capacity(total_num_verts);
 
         for v in 0..self.v_divisions {
             for u in 0..self.u_divisions {
 
                 // Compute slice vertices
-                let verts = [
-                    Vector3::<f32>::new(u_tab[u+1][1] * v_tab[v][0], v_tab[v][1], u_tab[u+1][0] * v_tab[v][0]),
-                    Vector3::<f32>::new(u_tab[u+1][1] * v_tab[v+1][0], v_tab[v+1][1], u_tab[u+1][0] * v_tab[v+1][0]),
-                    Vector3::<f32>::new(u_tab[u][1] * v_tab[v][0], v_tab[v][1], u_tab[u][0] * v_tab[v][0]),
-                    Vector3::<f32>::new(u_tab[u][1] * v_tab[v+1][0], v_tab[v+1][1], u_tab[u][0] * v_tab[v+1][0]),
-                ];
+                let verts = [Vector3::<f32>::new(u_tab[u + 1][1] * v_tab[v][0],
+                                                 v_tab[v][1],
+                                                 u_tab[u + 1][0] * v_tab[v][0]),
+                             Vector3::<f32>::new(u_tab[u + 1][1] * v_tab[v + 1][0],
+                                                 v_tab[v + 1][1],
+                                                 u_tab[u + 1][0] * v_tab[v + 1][0]),
+                             Vector3::<f32>::new(u_tab[u][1] * v_tab[v][0],
+                                                 v_tab[v][1],
+                                                 u_tab[u][0] * v_tab[v][0]),
+                             Vector3::<f32>::new(u_tab[u][1] * v_tab[v + 1][0],
+                                                 v_tab[v + 1][1],
+                                                 u_tab[u][0] * v_tab[v + 1][0])];
 
-                let lut_coords = [
-                    (u+1, v),
-                    (u+1, v+1),
-                    (u, v),
-                    (u, v+1)
-                ];
+                let lut_coords = [(u + 1, v), (u + 1, v + 1), (u, v), (u, v + 1)];
 
                 // Compute face index offset and count
-                let (offset, count) =
-                    if v == 0 {
-                        (3, 3)
-                    }
-                    else if v == self.v_divisions - 1 {
-                        (0, 3)
-                    }
-                    else {
-                        (0, 6)
-                    };
+                let (offset, count) = if v == 0 {
+                    (3, 3)
+                } else if v == self.v_divisions - 1 {
+                    (0, 3)
+                } else {
+                    (0, 6)
+                };
 
                 // Compute face normal
-                let v0 = &verts[indices[offset+0]];
-                let v1 = &verts[indices[offset+1]];
-                let v2 = &verts[indices[offset+2]];
+                let v0 = &verts[indices[offset + 0]];
+                let v1 = &verts[indices[offset + 1]];
+                let v2 = &verts[indices[offset + 2]];
                 let normal = (v1 - v0).cross(v2 - v0).normalize();
 
                 // Emit vertices.
-                for index in offset..offset+count {
-                    let position = &verts[indices[index]];
-                    let (u,v) = lut_coords[indices[index]];
-                    vertices.push(Vertex{
-                        position: Point3::<f32>::from_homogeneous(self.matrix * position.extend(1.0)).into(),
+                for index in offset..offset + count {
+                    let vpos = &verts[indices[index]];
+                    let pos = self.matrix * vpos.extend(1.0);
+                    let (u, v) = lut_coords[indices[index]];
+                    vertices.push(Vertex {
+                        position: Point3::<f32>::from_homogeneous(pos).into(),
                         normal: (normal_matrix * normal).normalize().into(),
-                        texcoord: [
-                            u as f32 / self.u_divisions as f32,
-                            v as f32 / self.v_divisions as f32
-                        ],
+                        texcoord: [u as f32 / self.u_divisions as f32,
+                                   v as f32 / self.v_divisions as f32],
                     });
                 }
             }
@@ -310,8 +303,8 @@ impl SphereBuilder {
 #[test]
 pub fn ensure_default_sphere_is_unit_sphere() {
     let vertices = SphereBuilder::new()
-                   .build_vertices()
-                   .expect("Failed to build vertices");
+        .build_vertices()
+        .expect("Failed to build vertices");
     for ref vertex in vertices {
         assert_ulps_eq!(Vector3::<f32>::from(vertex.position).magnitude(), 1.0);
     }
@@ -320,21 +313,21 @@ pub fn ensure_default_sphere_is_unit_sphere() {
 #[test]
 pub fn ensure_default_sphere_has_centroid_at_origin() {
     let vertices = SphereBuilder::new()
-                   .build_vertices()
-                   .expect("Failed to build vertices");
+        .build_vertices()
+        .expect("Failed to build vertices");
     let mut sum = Vector3::<f32>::zero();
     for ref vertex in vertices {
         sum = sum + Vector3::<f32>::from(vertex.position);
     }
-    assert_ulps_eq!(sum, Vector3::<f32>::zero(), epsilon=0.0001);
+    assert_ulps_eq!(sum, Vector3::<f32>::zero(), epsilon = 0.0001);
 }
 
 #[test]
 pub fn ensure_default_sphere_has_outward_facing_normals() {
     let vertices = SphereBuilder::new()
-                   .scale(2.0, 2.0, 2.0)
-                   .build_vertices()
-                   .expect("Failed to build vertices");
+        .scale(2.0, 2.0, 2.0)
+        .build_vertices()
+        .expect("Failed to build vertices");
     for ref vertex in vertices {
         let position = Vector3::<f32>::from(vertex.position);
         let normal = Vector3::<f32>::from(vertex.normal);
@@ -348,9 +341,9 @@ pub fn ensure_default_sphere_has_outward_facing_normals() {
 #[test]
 pub fn ensure_default_sphere_has_uvs_in_unit_range() {
     let vertices = SphereBuilder::new()
-                   .with_divisions(4, 4)
-                   .build_vertices()
-                   .expect("Failed to build vertices");
+        .with_divisions(4, 4)
+        .build_vertices()
+        .expect("Failed to build vertices");
     for ref vertex in vertices {
         assert!(vertex.texcoord[0] >= 0.0);
         assert!(vertex.texcoord[1] >= 0.0);
@@ -362,8 +355,8 @@ pub fn ensure_default_sphere_has_uvs_in_unit_range() {
 #[test]
 pub fn ensure_default_sphere_has_ccw_triangles() {
     let vertices = SphereBuilder::new()
-                   .build_vertices()
-                   .expect("Failed to build vertices");
+        .build_vertices()
+        .expect("Failed to build vertices");
     for chunk in vertices.chunks(3) {
         let v0 = Vector3::<f32>::from(chunk[0].position);
         let v1 = Vector3::<f32>::from(chunk[1].position);
@@ -381,8 +374,8 @@ pub fn ensure_default_sphere_has_ccw_triangles() {
 #[test]
 pub fn ensure_default_sphere_has_faceted_normals() {
     let vertices = SphereBuilder::new()
-                   .build_vertices()
-                   .expect("Failed to build vertices");
+        .build_vertices()
+        .expect("Failed to build vertices");
 
     for chunk in vertices.chunks(3) {
         let v0 = Vector3::<f32>::from(chunk[0].position);
@@ -394,9 +387,9 @@ pub fn ensure_default_sphere_has_faceted_normals() {
         let e0 = v1 - v0;
         let e1 = v2 - v0;
         let n = e0.cross(e1).normalize();
-        assert_ulps_eq!(n, n0, epsilon=0.0001);
-        assert_ulps_eq!(n, n1, epsilon=0.0001);
-        assert_ulps_eq!(n, n2, epsilon=0.0001);
+        assert_ulps_eq!(n, n0, epsilon = 0.0001);
+        assert_ulps_eq!(n, n1, epsilon = 0.0001);
+        assert_ulps_eq!(n, n2, epsilon = 0.0001);
     }
 }
 
@@ -404,28 +397,24 @@ pub fn ensure_default_sphere_has_faceted_normals() {
 pub fn ensure_default_sphere_has_planar_quads() {
     let builder = SphereBuilder::new();
     let vertices = builder.build_vertices()
-                          .expect("Failed to build vertices");
+        .expect("Failed to build vertices");
 
     let mut index = builder.num_vertices_per_cap();
     for _ in 0..builder.num_slices() {
         for _ in 0..builder.num_vertices_per_slice() / 6 {
-            let tri0 = [
-                Vector3::<f32>::from(vertices[index+0].position),
-                Vector3::<f32>::from(vertices[index+1].position),
-                Vector3::<f32>::from(vertices[index+2].position),
-            ];
+            let tri0 = [Vector3::<f32>::from(vertices[index + 0].position),
+                        Vector3::<f32>::from(vertices[index + 1].position),
+                        Vector3::<f32>::from(vertices[index + 2].position)];
 
-            let tri1 = [
-                Vector3::<f32>::from(vertices[index+3].position),
-                Vector3::<f32>::from(vertices[index+4].position),
-                Vector3::<f32>::from(vertices[index+5].position),
-            ];
+            let tri1 = [Vector3::<f32>::from(vertices[index + 3].position),
+                        Vector3::<f32>::from(vertices[index + 4].position),
+                        Vector3::<f32>::from(vertices[index + 5].position)];
 
             index += 6;
 
             let n0 = (tri0[1] - tri0[0]).cross(tri0[2] - tri0[0]).normalize();
             let n1 = (tri1[1] - tri1[0]).cross(tri1[2] - tri1[0]).normalize();
-            assert_ulps_eq!(n0, n1, epsilon=0.0001);
+            assert_ulps_eq!(n0, n1, epsilon = 0.0001);
         }
     }
 }
