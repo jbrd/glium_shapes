@@ -63,6 +63,19 @@ and glium. Will add extra shapes when needed, and will happily accept contributi
 extra shapes as well. Bugs will be fixed (please raise an issue if you find any!).
 
 
+## Contributing Patches
+
+Contributions are most welcome! To reduce the feedback loop, please ensure you perform
+the following checks before contributing a patch:
+
+* Ensure the project builds in debug: `cargo build`
+* Ensure the project builds in release: `cargo build --release`
+* Ensure the tests pass: `cargo test`
+* Ensure the coding style is consistent (`cargo fmt` should yield no changes)
+* Ensure all the examples build and run successfully
+* Ensure your name is added to the contributors list in README.md
+
+
 ## Contributors
 
 James Bird (@jbrd)
