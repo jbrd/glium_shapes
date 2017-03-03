@@ -1,5 +1,7 @@
 # glium_shapes
 
+![Crates.io](https://img.shields.io/crates/v/glium_shapes.svg) ![TravisCI](https://travis-ci.org/jbrd/glium_shapes.svg?branch=master)
+
 Prefabricated shapes for the Glium OpenGL library.
 
 The following shapes are currently provided by the library:
