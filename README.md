@@ -30,7 +30,7 @@ The following shapes are currently provided by the library:
                .scale(2.0, 3.0, 4.0)
                .build(display)
                .expect("Failed to build cuboid shape");
-  frame.draw( &cuboid, &cuboid, your_shader_program, your_uniforms, your_draw_params );
+  frame.draw(&cuboid, &cuboid, your_shader_program, your_uniforms, your_draw_params);
   ```
 
 - Examples for all shapes are provided. Just run:
