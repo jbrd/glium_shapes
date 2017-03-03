@@ -9,6 +9,6 @@ homepage = "https://github.com/jbrd/glium_shapes.git"
 readme = "README.md"
 
 [dependencies]
-approx = "*"
-cgmath = "*"
-glium = "*"
+approx = "~0.1.1"
+cgmath = "~0.12.0"
+glium = "~0.16.0"
