@@ -12,9 +12,9 @@ The following shapes are currently provided by the library:
 * Sphere
 
 
-## Requirements
+## Documentation
 
-* Rust >= 1.15.1
+Documentation can be found here: [http://jbrd.github.io/glium_shapes](http://jbrd.github.io/glium_shapes)
 
 
 ## Getting Started
