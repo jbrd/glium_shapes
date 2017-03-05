@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `CuboidBuilder` struct in crate `glium_shapes`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, CuboidBuilder">
+
+    <title>glium_shapes::cuboid::CuboidBuilder - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../../main.css">
+    
+
+    
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        
+        <p class='location'><a href='../index.html'>glium_shapes</a>::<wbr><a href='index.html'>cuboid</a></p><script>window.sidebarCurrent = {name: 'CuboidBuilder', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content struct">
+<h1 class='fqn'><span class='in-band'>Struct <a href='../index.html'>glium_shapes</a>::<wbr><a href='index.html'>cuboid</a>::<wbr><a class='struct' href=''>CuboidBuilder</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a class='srclink' href='../../src/glium_shapes/cuboid.rs.html#44-46' title='goto source code'>[src]</a></span></h1>
+<pre class='rust struct'>pub struct CuboidBuilder { /* fields omitted */ }</pre><div class='docblock'><p>Responsible for building and returning a <code>Cuboid</code> object.</p>
+
+<p>By default, the cuboid is defined as a unit-cube with its centre-of-mass
+located at the origin. This can be overriden using the transformation
+methods on this object.</p>
+
+<p>The resultant geometry is constructed to suit OpenGL defaults - assuming
+a right-handed coordinate system, front-facing polygons are defined in
+counter-clock-wise order. Vertex normals point in the direction of their
+respective face (such that the shape appears faceted when lit). Vertex
+texture coordinates define a planar-projection on each face.</p>
+</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl <a class='struct' href='../../glium_shapes/cuboid/struct.CuboidBuilder.html' title='glium_shapes::cuboid::CuboidBuilder'>CuboidBuilder</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/glium_shapes/cuboid.rs.html#54-199' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.new' class='method'><span id='new.v' class='invisible'><code>fn <a href='#method.new' class='fnname'>new</a>() -&gt; <a class='struct' href='../../glium_shapes/cuboid/struct.CuboidBuilder.html' title='glium_shapes::cuboid::CuboidBuilder'>CuboidBuilder</a></code></span></h4>
+<div class='docblock'><p>Create a new <code>CuboidBuilder</code> object.</p>
+</div><h4 id='method.scale' class='method'><span id='scale.v' class='invisible'><code>fn <a href='#method.scale' class='fnname'>scale</a>(self, x: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.f32.html'>f32</a>, y: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.f32.html'>f32</a>, z: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.f32.html'>f32</a>) -&gt; Self</code></span></h4>
+<div class='docblock'><p>Apply a scaling transformation to the shape.</p>
+
+<p>The <code>scale</code>, <code>translate</code>, and <code>rotate</code> functions accumulate, and are
+not commutative. The transformation functions are intended to provide
+flexibility in model-space. For per-instance world-space transformations,
+one should prefer to share as few shapes as possible across multiple
+instances, and instead rely on uniform constants in the shader and/or
+instanced drawing.</p>
+</div><h4 id='method.translate' class='method'><span id='translate.v' class='invisible'><code>fn <a href='#method.translate' class='fnname'>translate</a>(self, x: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.f32.html'>f32</a>, y: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.f32.html'>f32</a>, z: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.f32.html'>f32</a>) -&gt; Self</code></span></h4>
+<div class='docblock'><p>Apply a translation transformation to the shape.</p>
+
+<p>The <code>scale</code>, <code>translate</code>, and <code>rotate</code> functions accumulate, and are
+not commutative. The transformation functions are intended to provide
+flexibility in model-space. For per-instance world-space transformations,
+one should prefer to share as few shapes as possible across multiple
+instances, and instead rely on uniform constants in the shader and/or
+instanced drawing.</p>
+</div><h4 id='method.rotate_x' class='method'><span id='rotate_x.v' class='invisible'><code>fn <a href='#method.rotate_x' class='fnname'>rotate_x</a>(self, radians: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.f32.html'>f32</a>) -&gt; Self</code></span></h4>
+<div class='docblock'><p>Apply a rotation transformation to the shape about the x-axis.</p>
+
+<p>The <code>scale</code>, <code>translate</code>, and <code>rotate</code> functions accumulate, and are
+not commutative. The transformation functions are intended to provide
+flexibility in model-space. For per-instance world-space transformations,
+one should prefer to share as few shapes as possible across multiple
+instances, and instead rely on uniform constants in the shader and/or
+instanced drawing.</p>
+</div><h4 id='method.rotate_y' class='method'><span id='rotate_y.v' class='invisible'><code>fn <a href='#method.rotate_y' class='fnname'>rotate_y</a>(self, radians: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.f32.html'>f32</a>) -&gt; Self</code></span></h4>
+<div class='docblock'><p>Apply a rotation transformation to the shape about the y-axis.</p>
+
+<p>The <code>scale</code>, <code>translate</code>, and <code>rotate</code> functions accumulate, and are
+not commutative. The transformation functions are intended to provide
+flexibility in model-space. For per-instance world-space transformations,
+one should prefer to share as few shapes as possible across multiple
+instances, and instead rely on uniform constants in the shader and/or
+instanced drawing.</p>
+</div><h4 id='method.rotate_z' class='method'><span id='rotate_z.v' class='invisible'><code>fn <a href='#method.rotate_z' class='fnname'>rotate_z</a>(self, radians: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.f32.html'>f32</a>) -&gt; Self</code></span></h4>
+<div class='docblock'><p>Apply a rotation transformation to the shape about the z-axis.</p>
+
+<p>The <code>scale</code>, <code>translate</code>, and <code>rotate</code> functions accumulate, and are
+not commutative. The transformation functions are intended to provide
+flexibility in model-space. For per-instance world-space transformations,
+one should prefer to share as few shapes as possible across multiple
+instances, and instead rely on uniform constants in the shader and/or
+instanced drawing.</p>
+</div><h4 id='method.build' class='method'><span id='build.v' class='invisible'><code>fn <a href='#method.build' class='fnname'>build</a>&lt;F&gt;(self, display: &amp;F) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;<a class='struct' href='../../glium_shapes/cuboid/struct.Cuboid.html' title='glium_shapes::cuboid::Cuboid'>Cuboid</a>, <a class='enum' href='../../glium_shapes/errors/enum.ShapeCreationError.html' title='glium_shapes::errors::ShapeCreationError'>ShapeCreationError</a>&gt; <span class='where'>where F: Facade</span></code></span></h4>
+<div class='docblock'><p>Build a new <code>Cuboid</code> object.</p>
+</div><h4 id='method.build_vertices' class='method'><span id='build_vertices.v' class='invisible'><code>fn <a href='#method.build_vertices' class='fnname'>build_vertices</a>(&amp;self) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;<a class='struct' href='https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html' title='collections::vec::Vec'>Vec</a>&lt;<a class='struct' href='../../glium_shapes/vertex/struct.Vertex.html' title='glium_shapes::vertex::Vertex'>Vertex</a>&gt;, <a class='enum' href='../../glium_shapes/errors/enum.ShapeCreationError.html' title='glium_shapes::errors::ShapeCreationError'>ShapeCreationError</a>&gt;</code></span></h4>
+<div class='docblock'><p>Build the shape vertices and return them in a vector.</p>
+
+<p>Useful if you wish to do other things with the vertices besides constructing
+a <code>Cuboid</code> object (e.g. unit testing, further processing, etc).</p>
+</div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/default/trait.Default.html' title='core::default::Default'>Default</a> for <a class='struct' href='../../glium_shapes/cuboid/struct.CuboidBuilder.html' title='glium_shapes::cuboid::CuboidBuilder'>CuboidBuilder</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/glium_shapes/cuboid.rs.html#48-52' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.default' class='method'><span id='default.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/default/trait.Default.html#tymethod.default' class='fnname'>default</a>() -&gt; Self</code></span></h4>
+<div class='docblock'><p>Returns the &quot;default value&quot; for a type. <a href="https://doc.rust-lang.org/nightly/core/default/trait.Default.html#tymethod.default">Read more</a></p>
+</div></div></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>&larrb;</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>&rarrb;</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../../";
+        window.currentCrate = "glium_shapes";
+    </script>
+    <script src="../../jquery.js"></script>
+    <script src="../../main.js"></script>
+    <script defer src="../../search-index.js"></script>
+</body>
+</html>

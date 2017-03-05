@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["Vertex","The vertex structure shared across all shapes."]]});

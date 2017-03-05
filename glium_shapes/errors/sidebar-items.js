@@ -1,0 +1,1 @@
+initSidebarItems({"enum":[["ShapeCreationError","The error object that is returned when a shape fails to build."]]});

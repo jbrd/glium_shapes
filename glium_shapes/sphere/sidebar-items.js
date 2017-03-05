@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["Sphere","A polygonal `Sphere` object."],["SphereBuilder","Responsible for building and returning a `Sphere` object."]]});

@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["Quad","A polygonal quad."],["QuadBuilder","Responsible for building and returning a `Quad` object."]]});
