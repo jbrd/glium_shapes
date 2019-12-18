@@ -155,7 +155,7 @@ impl SphereBuilder {
         where F: glium::backend::Facade
     {
         let vertices =
-            try!(glium::vertex::VertexBuffer::<Vertex>::new(display, &try!(self.build_vertices())));
+            glium::vertex::VertexBuffer::<Vertex>::new(display, &self.build_vertices()?)?;
 
         Ok(Sphere { vertices: glium::vertex::VertexBufferAny::from(vertices) })
     }

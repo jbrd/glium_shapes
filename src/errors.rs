@@ -29,7 +29,7 @@ impl std::error::Error for ShapeCreationError {
         }
     }
 
-    fn cause(&self) -> Option<&Error> {
+    fn cause(&self) -> Option<&dyn Error> {
         match self {
             &ShapeCreationError::VertexBufferCreationError(ref error) => Some(error),
             _ => None,

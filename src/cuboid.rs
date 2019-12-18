@@ -138,8 +138,8 @@ impl CuboidBuilder {
     pub fn build<F>(self, display: &F) -> Result<Cuboid, ShapeCreationError>
         where F: glium::backend::Facade
     {
-        let vertices = &try!(self.build_vertices());
-        let vbuffer = try!(glium::vertex::VertexBuffer::<Vertex>::new(display, vertices));
+        let vertices = &self.build_vertices()?;
+        let vbuffer = glium::vertex::VertexBuffer::<Vertex>::new(display, vertices)?;
         Ok(Cuboid { vertices: glium::vertex::VertexBufferAny::from(vbuffer) })
     }
 

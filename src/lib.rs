@@ -28,7 +28,6 @@
 //!
 //! The shader program, uniform buffers, and draw parameters are not provided by this library.
 
-#[macro_use]
 extern crate approx;
 
 #[macro_use]
