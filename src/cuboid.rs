@@ -3,8 +3,8 @@
 extern crate cgmath;
 extern crate glium;
 
-use errors::ShapeCreationError;
 use self::cgmath::*;
+use errors::ShapeCreationError;
 use vertex::Vertex;
 
 /// A polygonal `Cuboid` object.
@@ -47,7 +47,9 @@ pub struct CuboidBuilder {
 
 impl Default for CuboidBuilder {
     fn default() -> Self {
-        CuboidBuilder { matrix: cgmath::Matrix4::<f32>::identity() }
+        CuboidBuilder {
+            matrix: cgmath::Matrix4::<f32>::identity(),
+        }
     }
 }
 
@@ -92,11 +94,9 @@ impl CuboidBuilder {
     /// instances, and instead rely on uniform constants in the shader and/or
     /// instanced drawing.
     pub fn rotate_x(mut self, radians: f32) -> Self {
-        self.matrix = cgmath::Matrix4::<f32>::from(
-            cgmath::Matrix3::<f32>::from_angle_x(
-                cgmath::Rad::<f32>(radians)
-            )
-        ) * self.matrix;
+        self.matrix = cgmath::Matrix4::<f32>::from(cgmath::Matrix3::<f32>::from_angle_x(
+            cgmath::Rad::<f32>(radians),
+        )) * self.matrix;
         return self;
     }
 
@@ -109,11 +109,9 @@ impl CuboidBuilder {
     /// instances, and instead rely on uniform constants in the shader and/or
     /// instanced drawing.
     pub fn rotate_y(mut self, radians: f32) -> Self {
-        self.matrix = cgmath::Matrix4::<f32>::from(
-            cgmath::Matrix3::<f32>::from_angle_y(
-                cgmath::Rad::<f32>(radians)
-            )
-        ) * self.matrix;
+        self.matrix = cgmath::Matrix4::<f32>::from(cgmath::Matrix3::<f32>::from_angle_y(
+            cgmath::Rad::<f32>(radians),
+        )) * self.matrix;
         return self;
     }
 
@@ -126,21 +124,22 @@ impl CuboidBuilder {
     /// instances, and instead rely on uniform constants in the shader and/or
     /// instanced drawing.
     pub fn rotate_z(mut self, radians: f32) -> Self {
-        self.matrix = cgmath::Matrix4::<f32>::from(
-            cgmath::Matrix3::<f32>::from_angle_z(
-                cgmath::Rad::<f32>(radians)
-            )
-        ) * self.matrix;
+        self.matrix = cgmath::Matrix4::<f32>::from(cgmath::Matrix3::<f32>::from_angle_z(
+            cgmath::Rad::<f32>(radians),
+        )) * self.matrix;
         return self;
     }
 
     /// Build a new `Cuboid` object.
     pub fn build<F>(self, display: &F) -> Result<Cuboid, ShapeCreationError>
-        where F: glium::backend::Facade
+    where
+        F: glium::backend::Facade,
     {
         let vertices = &self.build_vertices()?;
         let vbuffer = glium::vertex::VertexBuffer::<Vertex>::new(display, vertices)?;
-        Ok(Cuboid { vertices: glium::vertex::VertexBufferAny::from(vbuffer) })
+        Ok(Cuboid {
+            vertices: glium::vertex::VertexBufferAny::from(vbuffer),
+        })
     }
 
     /// Build the shape vertices and return them in a vector.
@@ -148,7 +147,6 @@ impl CuboidBuilder {
     /// Useful if you wish to do other things with the vertices besides constructing
     /// a `Cuboid` object (e.g. unit testing, further processing, etc).
     pub fn build_vertices(&self) -> Result<Vec<Vertex>, ShapeCreationError> {
-
         // Define lookup-tables used during construction of the cuboid geometry
         let index_lut = [
             0, 4, 1, 5, // -X
@@ -163,18 +161,19 @@ impl CuboidBuilder {
         let verts_per_side = 6;
 
         // Compute the normal transformation matrix.
-        let normal_matrix = Matrix3::<f32>::from_cols(self.matrix.x.truncate(),
-                                                      self.matrix.y.truncate(),
-                                                      self.matrix.z.truncate())
-            .invert()
-            .unwrap_or(Matrix3::<f32>::identity())
-            .transpose();
+        let normal_matrix = Matrix3::<f32>::from_cols(
+            self.matrix.x.truncate(),
+            self.matrix.y.truncate(),
+            self.matrix.z.truncate(),
+        )
+        .invert()
+        .unwrap_or(Matrix3::<f32>::identity())
+        .transpose();
 
         // Generate cuboid vertices.
         let mut vertices = Vec::<Vertex>::with_capacity(verts_per_side * num_sides);
 
         for side in 0..num_sides {
-
             // Compute side normal.
             let mut normal = Vector3::<f32>::new(0.0, 0.0, 0.0);
             normal[side / 2] = (((side % 2) * 2) as f32) - 1.0;
@@ -182,10 +181,12 @@ impl CuboidBuilder {
             // Build side vertices.
             for vert in 0..verts_per_side {
                 let coord = index_lut[poly_lut[vert] + (side * 4)];
-                let vpos = Vector4::<f32>::new((((coord & 2) - 1) as f32) * 0.5,
-                                               (((coord & 1) * 2 - 1) as f32) * 0.5,
-                                               ((((coord >> 1) & 2) - 1) as f32) * 0.5,
-                                               1.0);
+                let vpos = Vector4::<f32>::new(
+                    (((coord & 2) - 1) as f32) * 0.5,
+                    (((coord & 1) * 2 - 1) as f32) * 0.5,
+                    ((((coord >> 1) & 2) - 1) as f32) * 0.5,
+                    1.0,
+                );
                 vertices.push(Vertex {
                     position: Point3::<f32>::from_homogeneous(self.matrix * vpos).into(),
                     normal: (normal_matrix * normal).normalize().into(),

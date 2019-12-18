@@ -1,12 +1,12 @@
 //! A module containing the error structures for this crate.
-extern crate glium;
 extern crate core;
+extern crate glium;
 extern crate std;
 
 use std::error::Error;
 
 /// The error object that is returned when a shape fails to build.
-#[derive(Debug,Copy,Clone)]
+#[derive(Debug, Copy, Clone)]
 pub enum ShapeCreationError {
     /// The shape failed to build because vertex buffer could not be created.
     VertexBufferCreationError(glium::vertex::BufferCreationError),

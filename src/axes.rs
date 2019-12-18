@@ -3,8 +3,8 @@
 extern crate cgmath;
 extern crate glium;
 
-use errors::ShapeCreationError;
 use self::cgmath::*;
+use errors::ShapeCreationError;
 use vertex::Vertex;
 
 /// A set of orthogonal `Axes` lines.
@@ -47,7 +47,9 @@ pub struct AxesBuilder {
 
 impl Default for AxesBuilder {
     fn default() -> AxesBuilder {
-        AxesBuilder { matrix: cgmath::Matrix4::<f32>::identity() }
+        AxesBuilder {
+            matrix: cgmath::Matrix4::<f32>::identity(),
+        }
     }
 }
 
@@ -92,11 +94,9 @@ impl AxesBuilder {
     /// instances, and instead rely on uniform constants in the shader and/or
     /// instanced drawing.
     pub fn rotate_x(mut self, radians: f32) -> Self {
-        self.matrix = cgmath::Matrix4::<f32>::from(
-            cgmath::Matrix3::<f32>::from_angle_x(
-                cgmath::Rad::<f32>(radians)
-            )
-        ) * self.matrix;
+        self.matrix = cgmath::Matrix4::<f32>::from(cgmath::Matrix3::<f32>::from_angle_x(
+            cgmath::Rad::<f32>(radians),
+        )) * self.matrix;
         return self;
     }
 
@@ -109,11 +109,9 @@ impl AxesBuilder {
     /// instances, and instead rely on uniform constants in the shader and/or
     /// instanced drawing.
     pub fn rotate_y(mut self, radians: f32) -> Self {
-        self.matrix = cgmath::Matrix4::<f32>::from(
-            cgmath::Matrix3::<f32>::from_angle_y(
-                cgmath::Rad::<f32>(radians)
-            )
-        ) * self.matrix;
+        self.matrix = cgmath::Matrix4::<f32>::from(cgmath::Matrix3::<f32>::from_angle_y(
+            cgmath::Rad::<f32>(radians),
+        )) * self.matrix;
         return self;
     }
 
@@ -126,22 +124,23 @@ impl AxesBuilder {
     /// instances, and instead rely on uniform constants in the shader and/or
     /// instanced drawing.
     pub fn rotate_z(mut self, radians: f32) -> Self {
-        self.matrix = cgmath::Matrix4::<f32>::from(
-            cgmath::Matrix3::<f32>::from_angle_z(
-                cgmath::Rad::<f32>(radians)
-            )
-        ) * self.matrix;
+        self.matrix = cgmath::Matrix4::<f32>::from(cgmath::Matrix3::<f32>::from_angle_z(
+            cgmath::Rad::<f32>(radians),
+        )) * self.matrix;
         return self;
     }
 
     /// Build a new `Axes` object.
     pub fn build<F>(self, display: &F) -> Result<Axes, ShapeCreationError>
-        where F: glium::backend::Facade
+    where
+        F: glium::backend::Facade,
     {
         let vertices =
             glium::vertex::VertexBuffer::<Vertex>::new(display, &self.build_vertices()?)?;
 
-        Ok(Axes { vertices: glium::vertex::VertexBufferAny::from(vertices) })
+        Ok(Axes {
+            vertices: glium::vertex::VertexBufferAny::from(vertices),
+        })
     }
 
     /// Build the axes vertices and return them in a vector.
@@ -149,14 +148,15 @@ impl AxesBuilder {
     /// Useful if you wish to do other things with the vertices besides constructing
     /// a `Axes` object (e.g. unit testing, further processing, etc).
     pub fn build_vertices(&self) -> Result<Vec<Vertex>, ShapeCreationError> {
-
         // Compute the normal transformation matrix.
-        let normal_matrix = Matrix3::<f32>::from_cols(self.matrix.x.truncate(),
-                                                      self.matrix.y.truncate(),
-                                                      self.matrix.z.truncate())
-            .invert()
-            .unwrap_or(Matrix3::<f32>::identity())
-            .transpose();
+        let normal_matrix = Matrix3::<f32>::from_cols(
+            self.matrix.x.truncate(),
+            self.matrix.y.truncate(),
+            self.matrix.z.truncate(),
+        )
+        .invert()
+        .unwrap_or(Matrix3::<f32>::identity())
+        .transpose();
 
         // Build the vertices.
         let num_axes = 3;
@@ -202,8 +202,10 @@ pub fn ensure_default_axes_are_placed_at_origin() {
         .build_vertices()
         .expect("Failed to build vertices");
     for chunk in vertices.chunks(2) {
-        assert_eq!(Vector3::<f32>::from(chunk[0].position),
-                   Vector3::<f32>::zero());
+        assert_eq!(
+            Vector3::<f32>::from(chunk[0].position),
+            Vector3::<f32>::zero()
+        );
     }
 }
 
@@ -213,7 +215,8 @@ pub fn ensure_default_axes_are_orthogonal() {
         .build_vertices()
         .expect("Failed to build vertices");
     let chunks = vertices.chunks(2);
-    let axes: Vec<Vector3<f32>> = chunks.map(|chunk| {
+    let axes: Vec<Vector3<f32>> = chunks
+        .map(|chunk| {
             Vector3::<f32>::from(chunk[1].position) - Vector3::<f32>::from(chunk[0].position)
         })
         .collect();

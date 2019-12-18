@@ -3,8 +3,8 @@
 extern crate cgmath;
 extern crate glium;
 
-use errors::ShapeCreationError;
 use self::cgmath::*;
+use errors::ShapeCreationError;
 use vertex::Vertex;
 
 /// A polygonal quad.
@@ -50,7 +50,9 @@ pub struct QuadBuilder {
 
 impl Default for QuadBuilder {
     fn default() -> QuadBuilder {
-        QuadBuilder { matrix: cgmath::Matrix4::<f32>::identity() }
+        QuadBuilder {
+            matrix: cgmath::Matrix4::<f32>::identity(),
+        }
     }
 }
 
@@ -95,11 +97,9 @@ impl QuadBuilder {
     /// instances, and instead rely on uniform constants in the shader and/or
     /// instanced drawing.
     pub fn rotate_x(mut self, radians: f32) -> Self {
-        self.matrix = cgmath::Matrix4::<f32>::from(
-            cgmath::Matrix3::<f32>::from_angle_x(
-                cgmath::Rad::<f32>(radians)
-            )
-        ) * self.matrix;
+        self.matrix = cgmath::Matrix4::<f32>::from(cgmath::Matrix3::<f32>::from_angle_x(
+            cgmath::Rad::<f32>(radians),
+        )) * self.matrix;
         return self;
     }
 
@@ -112,11 +112,9 @@ impl QuadBuilder {
     /// instances, and instead rely on uniform constants in the shader and/or
     /// instanced drawing.
     pub fn rotate_y(mut self, radians: f32) -> Self {
-        self.matrix = cgmath::Matrix4::<f32>::from(
-            cgmath::Matrix3::<f32>::from_angle_y(
-                cgmath::Rad::<f32>(radians)
-            )
-        ) * self.matrix;
+        self.matrix = cgmath::Matrix4::<f32>::from(cgmath::Matrix3::<f32>::from_angle_y(
+            cgmath::Rad::<f32>(radians),
+        )) * self.matrix;
         return self;
     }
 
@@ -129,22 +127,23 @@ impl QuadBuilder {
     /// instances, and instead rely on uniform constants in the shader and/or
     /// instanced drawing.
     pub fn rotate_z(mut self, radians: f32) -> Self {
-        self.matrix = cgmath::Matrix4::<f32>::from(
-            cgmath::Matrix3::<f32>::from_angle_z(
-                cgmath::Rad::<f32>(radians)
-            )
-        ) * self.matrix;
+        self.matrix = cgmath::Matrix4::<f32>::from(cgmath::Matrix3::<f32>::from_angle_z(
+            cgmath::Rad::<f32>(radians),
+        )) * self.matrix;
         return self;
     }
 
     /// Build a new `Quad` object.
     pub fn build<F>(self, display: &F) -> Result<Quad, ShapeCreationError>
-        where F: glium::backend::Facade
+    where
+        F: glium::backend::Facade,
     {
         let vertices =
             glium::vertex::VertexBuffer::<Vertex>::new(display, &self.build_vertices()?)?;
 
-        Ok(Quad { vertices: glium::vertex::VertexBufferAny::from(vertices) })
+        Ok(Quad {
+            vertices: glium::vertex::VertexBufferAny::from(vertices),
+        })
     }
 
     /// Build the Quad vertices and return them in a vector.
@@ -152,14 +151,15 @@ impl QuadBuilder {
     /// Useful if you wish to do other things with the vertices besides constructing
     /// a `Quad` object (e.g. unit testing, further processing, etc).
     pub fn build_vertices(&self) -> Result<Vec<Vertex>, ShapeCreationError> {
-
         // Compute the normal transformation matrix.
-        let normal_matrix = Matrix3::<f32>::from_cols(self.matrix.x.truncate(),
-                                                      self.matrix.y.truncate(),
-                                                      self.matrix.z.truncate())
-            .invert()
-            .unwrap_or(Matrix3::<f32>::identity())
-            .transpose();
+        let normal_matrix = Matrix3::<f32>::from_cols(
+            self.matrix.x.truncate(),
+            self.matrix.y.truncate(),
+            self.matrix.z.truncate(),
+        )
+        .invert()
+        .unwrap_or(Matrix3::<f32>::identity())
+        .transpose();
 
         // Build the vertices.
         let verts_per_quad = 4;
@@ -216,13 +216,17 @@ pub fn ensure_default_quad_is_planar() {
     let vertices = QuadBuilder::new()
         .build_vertices()
         .expect("Failed to build vertices");
-    let tri0 = [Vector3::<f32>::from(vertices[0].position),
-                Vector3::<f32>::from(vertices[1].position),
-                Vector3::<f32>::from(vertices[2].position)];
+    let tri0 = [
+        Vector3::<f32>::from(vertices[0].position),
+        Vector3::<f32>::from(vertices[1].position),
+        Vector3::<f32>::from(vertices[2].position),
+    ];
 
-    let tri1 = [Vector3::<f32>::from(vertices[2].position),
-                Vector3::<f32>::from(vertices[1].position),
-                Vector3::<f32>::from(vertices[3].position)];
+    let tri1 = [
+        Vector3::<f32>::from(vertices[2].position),
+        Vector3::<f32>::from(vertices[1].position),
+        Vector3::<f32>::from(vertices[3].position),
+    ];
 
     let n0 = (tri0[1] - tri0[0]).cross(tri0[2] - tri0[0]).normalize();
     let n1 = (tri1[1] - tri1[0]).cross(tri1[2] - tri1[0]).normalize();
@@ -254,9 +258,11 @@ pub fn ensure_default_quad_has_face_aligned_normals() {
     let vertices = QuadBuilder::new()
         .build_vertices()
         .expect("Failed to build vertices");
-    let tri0 = [Vector3::<f32>::from(vertices[0].position),
-                Vector3::<f32>::from(vertices[1].position),
-                Vector3::<f32>::from(vertices[2].position)];
+    let tri0 = [
+        Vector3::<f32>::from(vertices[0].position),
+        Vector3::<f32>::from(vertices[1].position),
+        Vector3::<f32>::from(vertices[2].position),
+    ];
     let fnormal = (tri0[1] - tri0[0]).cross(tri0[2] - tri0[0]).normalize();
     for vertex in vertices.iter() {
         let vnormal = Vector3::<f32>::from(vertex.normal);

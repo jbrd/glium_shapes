@@ -4,9 +4,9 @@ extern crate cgmath;
 extern crate glium;
 
 use self::cgmath::*;
-use self::glium::*;
-use self::glium::uniforms::*;
 use self::glium::backend::glutin_backend::GlutinFacade;
+use self::glium::uniforms::*;
+use self::glium::*;
 
 /// Shared data used in the examples.
 pub struct ExampleData<'a> {
@@ -23,7 +23,6 @@ pub type FrameUniforms<'a> = UniformsStorage<'a, [[f32; 4]; 4], EmptyUniforms>;
 
 /// Setup the glium display and example data and return them both in a tuple.
 pub fn setup<'a>() -> (GlutinFacade, ExampleData<'a>) {
-
     let display = glium::glutin::WindowBuilder::new()
         .with_dimensions(600, 600)
         .with_depth_buffer(16)
@@ -65,7 +64,7 @@ pub fn setup<'a>() -> (GlutinFacade, ExampleData<'a>) {
                 ",
             }
         )
-            .expect("Failed to compile shader program"),
+        .expect("Failed to compile shader program"),
         draw_params: glium::DrawParameters {
             backface_culling: BackfaceCullingMode::CullClockwise,
             depth: glium::Depth {

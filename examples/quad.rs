@@ -5,7 +5,6 @@ mod common;
 use glium::Surface;
 
 fn main() {
-
     // Setup glium display and shared example data (program, uniforms, draw params, etc)
     let (display, data) = common::setup();
 
@@ -24,13 +23,13 @@ fn main() {
 
     // Loop until the user closes the display window.
     while common::process_events(&display) {
-
         // Begin a new frame.
         let (mut frame, uniforms) = common::begin_frame(&display);
 
         // KEY POINT: Draw the quad shape by passing it as a source
         // of both vertices and indices to glium.
-        frame.draw(&quad, &quad, &data.program, &uniforms, &data.draw_params)
+        frame
+            .draw(&quad, &quad, &data.program, &uniforms, &data.draw_params)
             .expect("Failed to draw quad shape");
 
         // Finish the frame.
