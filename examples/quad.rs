@@ -6,7 +6,7 @@ use glium::Surface;
 
 fn main() {
     // Setup glium display and shared example data (program, uniforms, draw params, etc)
-    let (display, data) = common::setup();
+    let (mut ev, display, data) = common::setup();
 
     // KEY POINT: Use an QuadBuilder to build a new Quad object.
     // Use the methods on the builder object to customise the resultant
@@ -22,7 +22,7 @@ fn main() {
         .expect("Failed to build quad shape");
 
     // Loop until the user closes the display window.
-    while common::process_events(&display) {
+    while common::process_events(&mut ev) {
         // Begin a new frame.
         let (mut frame, uniforms) = common::begin_frame(&display);
 

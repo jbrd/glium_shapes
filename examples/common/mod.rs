@@ -4,8 +4,8 @@ extern crate cgmath;
 extern crate glium;
 
 use self::cgmath::*;
-use self::glium::backend::glutin_backend::GlutinFacade;
 use self::glium::uniforms::*;
+use self::glium::Display;
 use self::glium::*;
 
 /// Shared data used in the examples.
@@ -22,13 +22,15 @@ pub struct ExampleData<'a> {
 pub type FrameUniforms<'a> = UniformsStorage<'a, [[f32; 4]; 4], EmptyUniforms>;
 
 /// Setup the glium display and example data and return them both in a tuple.
-pub fn setup<'a>() -> (GlutinFacade, ExampleData<'a>) {
-    let display = glium::glutin::WindowBuilder::new()
-        .with_dimensions(600, 600)
-        .with_depth_buffer(16)
-        .with_title("Example Viewer")
-        .build_glium()
-        .expect("Failed to build glium display");
+pub fn setup<'a>() -> (glium::glutin::EventsLoop, Display, ExampleData<'a>) {
+    let wb = glium::glutin::WindowBuilder::new()
+        .with_dimensions(glium::glutin::dpi::LogicalSize::new(600.0, 600.0))
+        .with_title("Example Viewer");
+
+    let cb = glium::glutin::ContextBuilder::new().with_depth_buffer(16);
+
+    let ev = glium::glutin::EventsLoop::new();
+    let display = glium::Display::new(wb, cb, &ev).expect("Failed to build glium display");
 
     let data = ExampleData {
         program: program!(&display,
@@ -75,24 +77,30 @@ pub fn setup<'a>() -> (GlutinFacade, ExampleData<'a>) {
             ..Default::default()
         },
     };
-    return (display, data);
+    return (ev, display, data);
 }
 
 /// Process any pending events in the glium display. Return true if the
 /// display is still open, or false if the user has closed the display.
-pub fn process_events(display: &GlutinFacade) -> bool {
-    for event in display.poll_events() {
+pub fn process_events(ev: &mut glium::glutin::EventsLoop) -> bool {
+    let mut result = true;
+    ev.poll_events(|event| {
         match event {
-            glium::glutin::Event::Closed => return false,
-            _ => continue,
-        }
-    }
-    return true;
+            glium::glutin::Event::WindowEvent { ref event, .. } => match event {
+                glium::glutin::WindowEvent::CloseRequested => {
+                    result = false;
+                }
+                _ => {}
+            },
+            _ => {}
+        };
+    });
+    return result;
 }
 
 /// Called before rendering a frame. Returns the glium frame and the
 /// uniforms that should be used for this frame.
-pub fn begin_frame<'a>(display: &GlutinFacade) -> (glium::Frame, FrameUniforms<'a>) {
+pub fn begin_frame<'a>(display: &Display) -> (glium::Frame, FrameUniforms<'a>) {
     let mut frame = display.draw();
     frame.clear_color(0.1, 0.1, 0.1, 1.0);
     frame.clear_depth(1.0);

@@ -15,9 +15,9 @@ pub struct Quad {
 }
 
 /// Allows a `Quad` object to be passed as a source of vertices.
-impl<'a> glium::vertex::IntoVerticesSource<'a> for &'a Quad {
-    fn into_vertices_source(self) -> glium::vertex::VerticesSource<'a> {
-        return self.vertices.into_vertices_source();
+impl<'a> From<&'a Quad> for glium::vertex::VerticesSource<'a> {
+    fn from(quad: &'a Quad) -> glium::vertex::VerticesSource<'a> {
+        (&quad.vertices).into()
     }
 }
 

@@ -10,6 +10,6 @@ documentation = "http://jbrd.github.io/glium_shapes"
 readme = "README.md"
 
 [dependencies]
-approx = "~0.1.1"
-cgmath = "~0.12.0"
-glium = "~0.16.0"
+approx = "~0.3"
+cgmath = "~0.17"
+glium = "~0.25"

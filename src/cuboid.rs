@@ -15,9 +15,9 @@ pub struct Cuboid {
 }
 
 /// Allows a `Cuboid` object to be passed as a source of vertices.
-impl<'a> glium::vertex::IntoVerticesSource<'a> for &'a Cuboid {
-    fn into_vertices_source(self) -> glium::vertex::VerticesSource<'a> {
-        return self.vertices.into_vertices_source();
+impl<'a> From<&'a Cuboid> for glium::vertex::VerticesSource<'a> {
+    fn from(cuboid: &'a Cuboid) -> glium::vertex::VerticesSource<'a> {
+        (&cuboid.vertices).into()
     }
 }
 

@@ -16,9 +16,9 @@ pub struct Sphere {
 }
 
 /// Allows a `Sphere` object to be passed as a source of vertices.
-impl<'a> glium::vertex::IntoVerticesSource<'a> for &'a Sphere {
-    fn into_vertices_source(self) -> glium::vertex::VerticesSource<'a> {
-        return self.vertices.into_vertices_source();
+impl<'a> From<&'a Sphere> for glium::vertex::VerticesSource<'a> {
+    fn from(sphere: &'a Sphere) -> glium::vertex::VerticesSource<'a> {
+        (&sphere.vertices).into()
     }
 }
 

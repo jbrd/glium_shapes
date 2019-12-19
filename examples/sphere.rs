@@ -5,7 +5,7 @@ use glium::Surface;
 
 fn main() {
     // Setup glium display and shared example data (program, uniforms, draw params, etc)
-    let (display, data) = common::setup();
+    let (mut ev, display, data) = common::setup();
 
     // KEY POINT: Use a SphereBuilder to build a new sphere.
     // Use the methods on the builder object to customise the resultant
@@ -18,7 +18,7 @@ fn main() {
         .expect("Failed to build sphere shape");
 
     // Loop until the user closes the display window.
-    while common::process_events(&display) {
+    while common::process_events(&mut ev) {
         // Begin a new frame.
         let (mut frame, uniforms) = common::begin_frame(&display);
 

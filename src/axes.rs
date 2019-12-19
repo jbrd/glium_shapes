@@ -15,9 +15,9 @@ pub struct Axes {
 }
 
 /// Allows an `Axes` object to be passed as a source of vertices.
-impl<'a> glium::vertex::IntoVerticesSource<'a> for &'a Axes {
-    fn into_vertices_source(self) -> glium::vertex::VerticesSource<'a> {
-        return self.vertices.into_vertices_source();
+impl<'a> From<&'a Axes> for glium::vertex::VerticesSource<'a> {
+    fn from(axes: &'a Axes) -> glium::vertex::VerticesSource<'a> {
+        (&axes.vertices).into()
     }
 }
 
