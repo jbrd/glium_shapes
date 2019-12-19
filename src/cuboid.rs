@@ -24,9 +24,9 @@ impl<'a> From<&'a Cuboid> for glium::vertex::VerticesSource<'a> {
 /// Allows a `Cuboid` object to be passed as a source of indices.
 impl<'a> Into<glium::index::IndicesSource<'a>> for &'a Cuboid {
     fn into(self) -> glium::index::IndicesSource<'a> {
-        return glium::index::IndicesSource::NoIndices {
+        glium::index::IndicesSource::NoIndices {
             primitives: glium::index::PrimitiveType::TrianglesList,
-        };
+        }
     }
 }
 
@@ -69,7 +69,7 @@ impl CuboidBuilder {
     /// instanced drawing.
     pub fn scale(mut self, x: f32, y: f32, z: f32) -> Self {
         self.matrix = cgmath::Matrix4::from_nonuniform_scale(x, y, z) * self.matrix;
-        return self;
+        self
     }
 
     /// Apply a translation transformation to the shape.
@@ -82,7 +82,7 @@ impl CuboidBuilder {
     /// instanced drawing.
     pub fn translate(mut self, x: f32, y: f32, z: f32) -> Self {
         self.matrix = cgmath::Matrix4::from_translation([x, y, z].into()) * self.matrix;
-        return self;
+        self
     }
 
     /// Apply a rotation transformation to the shape about the x-axis.
@@ -97,7 +97,7 @@ impl CuboidBuilder {
         self.matrix = cgmath::Matrix4::<f32>::from(cgmath::Matrix3::<f32>::from_angle_x(
             cgmath::Rad::<f32>(radians),
         )) * self.matrix;
-        return self;
+        self
     }
 
     /// Apply a rotation transformation to the shape about the y-axis.
@@ -112,7 +112,7 @@ impl CuboidBuilder {
         self.matrix = cgmath::Matrix4::<f32>::from(cgmath::Matrix3::<f32>::from_angle_y(
             cgmath::Rad::<f32>(radians),
         )) * self.matrix;
-        return self;
+        self
     }
 
     /// Apply a rotation transformation to the shape about the z-axis.
@@ -127,7 +127,7 @@ impl CuboidBuilder {
         self.matrix = cgmath::Matrix4::<f32>::from(cgmath::Matrix3::<f32>::from_angle_z(
             cgmath::Rad::<f32>(radians),
         )) * self.matrix;
-        return self;
+        self
     }
 
     /// Build a new `Cuboid` object.
@@ -167,7 +167,7 @@ impl CuboidBuilder {
             self.matrix.z.truncate(),
         )
         .invert()
-        .unwrap_or(Matrix3::<f32>::identity())
+        .unwrap_or_else(Matrix3::<f32>::identity)
         .transpose();
 
         // Generate cuboid vertices.
@@ -195,7 +195,7 @@ impl CuboidBuilder {
             }
         }
 
-        return Ok(vertices);
+        Ok(vertices)
     }
 }
 
@@ -204,10 +204,10 @@ pub fn ensure_default_cuboid_has_unit_dimensions() {
     let vertices = CuboidBuilder::new()
         .build_vertices()
         .expect("Failed to build vertices");
-    for ref vertex in vertices {
-        assert_eq!(vertex.position[0].abs(), 0.5);
-        assert_eq!(vertex.position[1].abs(), 0.5);
-        assert_eq!(vertex.position[2].abs(), 0.5);
+    for vertex in &vertices {
+        assert!(abs_diff_eq!(vertex.position[0].abs(), 0.5));
+        assert!(abs_diff_eq!(vertex.position[1].abs(), 0.5));
+        assert!(abs_diff_eq!(vertex.position[2].abs(), 0.5));
     }
 }
 
@@ -217,8 +217,8 @@ pub fn ensure_default_cuboid_has_centroid_at_origin() {
         .build_vertices()
         .expect("Failed to build vertices");
     let mut sum = Vector3::<f32>::zero();
-    for ref vertex in vertices {
-        sum = sum + Vector3::<f32>::from(vertex.position);
+    for vertex in &vertices {
+        sum += Vector3::<f32>::from(vertex.position);
     }
     assert_eq!(sum, Vector3::<f32>::zero());
 }
@@ -229,7 +229,7 @@ pub fn ensure_default_cuboid_has_outward_facing_normals() {
         .scale(2.0, 2.0, 2.0)
         .build_vertices()
         .expect("Failed to build vertices");
-    for ref vertex in vertices {
+    for vertex in &vertices {
         let position = Vector3::<f32>::from(vertex.position);
         let normal = Vector3::<f32>::from(vertex.normal);
         let outside = position + normal;
@@ -247,7 +247,7 @@ pub fn ensure_default_cuboid_has_uvs_in_unit_range() {
         .expect("Failed to build vertices");
     let mut min = Vector2::<f32>::new(f32::MAX, f32::MAX);
     let mut max = -min;
-    for ref vertex in vertices {
+    for vertex in &vertices {
         min.x = f32::min(min.x, vertex.texcoord[0]);
         min.y = f32::min(min.y, vertex.texcoord[1]);
         max.x = f32::max(max.x, vertex.texcoord[0]);

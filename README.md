@@ -74,6 +74,8 @@ the following checks before contributing a patch:
 * Ensure the project builds in release: `cargo build --release`
 * Ensure the tests pass: `cargo test`
 * Ensure the coding style is consistent (`cargo fmt` should yield no changes)
+* Ensure `cargo clippy --all-targets` returns no warnings or errors
+* Ensure `cargo doc` succeeds
 * Ensure all the examples build and run successfully
 * Ensure your name is added to the contributors list in README.md
 

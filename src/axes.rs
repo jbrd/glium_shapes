@@ -24,9 +24,9 @@ impl<'a> From<&'a Axes> for glium::vertex::VerticesSource<'a> {
 /// Allows an `Axes` object to be passed as a source of indices.
 impl<'a> Into<glium::index::IndicesSource<'a>> for &'a Axes {
     fn into(self) -> glium::index::IndicesSource<'a> {
-        return glium::index::IndicesSource::NoIndices {
+        glium::index::IndicesSource::NoIndices {
             primitives: glium::index::PrimitiveType::LinesList,
-        };
+        }
     }
 }
 
@@ -69,7 +69,7 @@ impl AxesBuilder {
     /// instanced drawing.
     pub fn scale(mut self, x: f32, y: f32, z: f32) -> Self {
         self.matrix = cgmath::Matrix4::from_nonuniform_scale(x, y, z) * self.matrix;
-        return self;
+        self
     }
 
     /// Apply a translation transformation to the shape.
@@ -82,7 +82,7 @@ impl AxesBuilder {
     /// instanced drawing.
     pub fn translate(mut self, x: f32, y: f32, z: f32) -> Self {
         self.matrix = cgmath::Matrix4::from_translation([x, y, z].into()) * self.matrix;
-        return self;
+        self
     }
 
     /// Apply a rotation transformation to the shape about the x-axis.
@@ -97,7 +97,7 @@ impl AxesBuilder {
         self.matrix = cgmath::Matrix4::<f32>::from(cgmath::Matrix3::<f32>::from_angle_x(
             cgmath::Rad::<f32>(radians),
         )) * self.matrix;
-        return self;
+        self
     }
 
     /// Apply a rotation transformation to the shape about the y-axis.
@@ -112,7 +112,7 @@ impl AxesBuilder {
         self.matrix = cgmath::Matrix4::<f32>::from(cgmath::Matrix3::<f32>::from_angle_y(
             cgmath::Rad::<f32>(radians),
         )) * self.matrix;
-        return self;
+        self
     }
 
     /// Apply a rotation transformation to the shape about the z-axis.
@@ -127,7 +127,7 @@ impl AxesBuilder {
         self.matrix = cgmath::Matrix4::<f32>::from(cgmath::Matrix3::<f32>::from_angle_z(
             cgmath::Rad::<f32>(radians),
         )) * self.matrix;
-        return self;
+        self
     }
 
     /// Build a new `Axes` object.
@@ -155,7 +155,7 @@ impl AxesBuilder {
             self.matrix.z.truncate(),
         )
         .invert()
-        .unwrap_or(Matrix3::<f32>::identity())
+        .unwrap_or_else(Matrix3::<f32>::identity)
         .transpose();
 
         // Build the vertices.
@@ -176,7 +176,7 @@ impl AxesBuilder {
             }
         }
 
-        return Ok(vertices);
+        Ok(vertices)
     }
 }
 
@@ -185,7 +185,7 @@ pub fn ensure_default_axes_has_unit_dimensions() {
     let vertices = AxesBuilder::new()
         .build_vertices()
         .expect("Failed to build vertices");
-    for ref vertex in vertices {
+    for vertex in &vertices {
         let pos = Vector3::<f32>::from(vertex.position);
         assert!(pos.x >= 0.0);
         assert!(pos.x <= 1.0);
@@ -232,8 +232,10 @@ pub fn ensure_axes_are_axis_aligned() {
         let p0 = Vector3::<f32>::from(chunk[0].position);
         let p1 = Vector3::<f32>::from(chunk[1].position);
         let dir = p1 - p0;
-        assert!(dir[0] == 1.0 || dir[1] == 1.0 || dir[2] == 1.0);
-        assert_eq!(dir.magnitude(), 1.0);
+        assert!(
+            abs_diff_eq!(dir[0], 1.0) || abs_diff_eq!(dir[1], 1.0) || abs_diff_eq!(dir[2], 1.0)
+        );
+        assert!(abs_diff_eq!(dir.magnitude(), 1.0));
     }
 }
 
@@ -259,7 +261,7 @@ pub fn ensure_axes_uvs_are_in_correct_range() {
         .expect("Failed to build vertices");
     let mut min = Vector2::<f32>::new(f32::MAX, f32::MAX);
     let mut max = -min;
-    for ref vertex in vertices {
+    for vertex in &vertices {
         min.x = f32::min(min.x, vertex.texcoord[0]);
         min.y = f32::min(min.y, vertex.texcoord[1]);
         max.x = f32::max(max.x, vertex.texcoord[0]);

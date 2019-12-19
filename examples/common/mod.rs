@@ -77,7 +77,7 @@ pub fn setup<'a>() -> (glium::glutin::EventsLoop, Display, ExampleData<'a>) {
             ..Default::default()
         },
     };
-    return (ev, display, data);
+    (ev, display, data)
 }
 
 /// Process any pending events in the glium display. Return true if the
@@ -85,17 +85,13 @@ pub fn setup<'a>() -> (glium::glutin::EventsLoop, Display, ExampleData<'a>) {
 pub fn process_events(ev: &mut glium::glutin::EventsLoop) -> bool {
     let mut result = true;
     ev.poll_events(|event| {
-        match event {
-            glium::glutin::Event::WindowEvent { ref event, .. } => match event {
-                glium::glutin::WindowEvent::CloseRequested => {
-                    result = false;
-                }
-                _ => {}
-            },
-            _ => {}
-        };
+        if let glium::glutin::Event::WindowEvent { ref event, .. } = event {
+            if let glium::glutin::WindowEvent::CloseRequested = event {
+                result = false;
+            }
+        }
     });
-    return result;
+    result
 }
 
 /// Called before rendering a frame. Returns the glium frame and the
@@ -105,7 +101,7 @@ pub fn begin_frame<'a>(display: &Display) -> (glium::Frame, FrameUniforms<'a>) {
     frame.clear_color(0.1, 0.1, 0.1, 1.0);
     frame.clear_depth(1.0);
     let uniforms = build_frame_uniforms(&frame);
-    return (frame, uniforms);
+    (frame, uniforms)
 }
 
 /// Called after rendering a frame. Swaps the display buffers.
@@ -127,9 +123,7 @@ fn build_frame_uniforms<'a>(frame: &glium::Frame) -> FrameUniforms<'a> {
 
     let view = Matrix4::<f32>::from_translation(Vector3::<f32>::new(0.0, 0.0, -10.0));
 
-    let uniforms = uniform! {
+    uniform! {
         matrix: (Matrix4::<f32>::from(projection) * view).into()
-    };
-
-    return uniforms;
+    }
 }

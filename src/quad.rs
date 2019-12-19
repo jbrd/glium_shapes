@@ -24,9 +24,9 @@ impl<'a> From<&'a Quad> for glium::vertex::VerticesSource<'a> {
 /// Allows a `Quad` object to be passed as a source of indices.
 impl<'a> Into<glium::index::IndicesSource<'a>> for &'a Quad {
     fn into(self) -> glium::index::IndicesSource<'a> {
-        return glium::index::IndicesSource::NoIndices {
+        glium::index::IndicesSource::NoIndices {
             primitives: glium::index::PrimitiveType::TriangleStrip,
-        };
+        }
     }
 }
 
@@ -72,7 +72,7 @@ impl QuadBuilder {
     /// instanced drawing.
     pub fn scale(mut self, x: f32, y: f32, z: f32) -> Self {
         self.matrix = cgmath::Matrix4::from_nonuniform_scale(x, y, z) * self.matrix;
-        return self;
+        self
     }
 
     /// Apply a translation transformation to the shape.
@@ -85,7 +85,7 @@ impl QuadBuilder {
     /// instanced drawing.
     pub fn translate(mut self, x: f32, y: f32, z: f32) -> Self {
         self.matrix = cgmath::Matrix4::from_translation([x, y, z].into()) * self.matrix;
-        return self;
+        self
     }
 
     /// Apply a rotation transformation to the shape about the x-axis.
@@ -100,7 +100,7 @@ impl QuadBuilder {
         self.matrix = cgmath::Matrix4::<f32>::from(cgmath::Matrix3::<f32>::from_angle_x(
             cgmath::Rad::<f32>(radians),
         )) * self.matrix;
-        return self;
+        self
     }
 
     /// Apply a rotation transformation to the shape about the y-axis.
@@ -115,7 +115,7 @@ impl QuadBuilder {
         self.matrix = cgmath::Matrix4::<f32>::from(cgmath::Matrix3::<f32>::from_angle_y(
             cgmath::Rad::<f32>(radians),
         )) * self.matrix;
-        return self;
+        self
     }
 
     /// Apply a rotation transformation to the shape about the z-axis.
@@ -130,7 +130,7 @@ impl QuadBuilder {
         self.matrix = cgmath::Matrix4::<f32>::from(cgmath::Matrix3::<f32>::from_angle_z(
             cgmath::Rad::<f32>(radians),
         )) * self.matrix;
-        return self;
+        self
     }
 
     /// Build a new `Quad` object.
@@ -158,7 +158,7 @@ impl QuadBuilder {
             self.matrix.z.truncate(),
         )
         .invert()
-        .unwrap_or(Matrix3::<f32>::identity())
+        .unwrap_or_else(Matrix3::<f32>::identity)
         .transpose();
 
         // Build the vertices.
@@ -174,7 +174,7 @@ impl QuadBuilder {
                 texcoord: [u, v],
             });
         }
-        return Ok(vertices);
+        Ok(vertices)
     }
 }
 
@@ -186,7 +186,7 @@ pub fn ensure_default_quad_has_edge_lengths_of_two() {
         .expect("Failed to build vertices");
     let mut min = Vector3::<f32>::new(f32::MAX, f32::MAX, f32::MAX);
     let mut max = -min;
-    for ref vertex in vertices {
+    for vertex in &vertices {
         let pos = Vector3::<f32>::from(vertex.position);
         min.x = f32::min(min.x, pos.x);
         min.y = f32::min(min.y, pos.y);
@@ -205,8 +205,8 @@ pub fn ensure_default_quad_has_centroid_at_origin() {
         .build_vertices()
         .expect("Failed to build vertices");
     let mut sum = Vector3::<f32>::zero();
-    for ref vertex in vertices {
-        sum = sum + Vector3::<f32>::from(vertex.position);
+    for vertex in &vertices {
+        sum += Vector3::<f32>::from(vertex.position);
     }
     assert_eq!(sum, Vector3::<f32>::zero());
 }
@@ -278,7 +278,7 @@ pub fn ensure_quad_uvs_are_in_correct_range() {
         .expect("Failed to build vertices");
     let mut min = Vector2::<f32>::new(f32::MAX, f32::MAX);
     let mut max = -min;
-    for ref vertex in vertices {
+    for vertex in &vertices {
         min.x = f32::min(min.x, vertex.texcoord[0]);
         min.y = f32::min(min.y, vertex.texcoord[1]);
         max.x = f32::max(max.x, vertex.texcoord[0]);

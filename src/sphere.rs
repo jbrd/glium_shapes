@@ -25,9 +25,9 @@ impl<'a> From<&'a Sphere> for glium::vertex::VerticesSource<'a> {
 /// Allows a `Sphere` object to be passed as a source of indices.
 impl<'a> Into<glium::index::IndicesSource<'a>> for &'a Sphere {
     fn into(self) -> glium::index::IndicesSource<'a> {
-        return glium::index::IndicesSource::NoIndices {
+        glium::index::IndicesSource::NoIndices {
             primitives: glium::index::PrimitiveType::TrianglesList,
-        };
+        }
     }
 }
 
@@ -70,7 +70,7 @@ impl SphereBuilder {
     pub fn with_divisions(mut self, u: usize, v: usize) -> Self {
         self.u_divisions = u;
         self.v_divisions = v;
-        return self;
+        self
     }
 
     /// Apply a scaling transformation to the shape.
@@ -83,7 +83,7 @@ impl SphereBuilder {
     /// instanced drawing.
     pub fn scale(mut self, x: f32, y: f32, z: f32) -> Self {
         self.matrix = cgmath::Matrix4::from_nonuniform_scale(x, y, z) * self.matrix;
-        return self;
+        self
     }
 
     /// Apply a translation transformation to the shape.
@@ -96,7 +96,7 @@ impl SphereBuilder {
     /// instanced drawing.
     pub fn translate(mut self, x: f32, y: f32, z: f32) -> Self {
         self.matrix = cgmath::Matrix4::from_translation([x, y, z].into()) * self.matrix;
-        return self;
+        self
     }
 
     /// Apply a rotation transformation to the shape about the x-axis.
@@ -111,7 +111,7 @@ impl SphereBuilder {
         self.matrix = cgmath::Matrix4::<f32>::from(cgmath::Matrix3::<f32>::from_angle_x(
             cgmath::Rad::<f32>(radians),
         )) * self.matrix;
-        return self;
+        self
     }
 
     /// Apply a rotation transformation to the shape about the y-axis.
@@ -126,7 +126,7 @@ impl SphereBuilder {
         self.matrix = cgmath::Matrix4::<f32>::from(cgmath::Matrix3::<f32>::from_angle_y(
             cgmath::Rad::<f32>(radians),
         )) * self.matrix;
-        return self;
+        self
     }
 
     /// Apply a rotation transformation to the shape about the z-axis.
@@ -141,7 +141,7 @@ impl SphereBuilder {
         self.matrix = cgmath::Matrix4::<f32>::from(cgmath::Matrix3::<f32>::from_angle_z(
             cgmath::Rad::<f32>(radians),
         )) * self.matrix;
-        return self;
+        self
     }
 
     /// Build a new `Sphere` object.
@@ -180,11 +180,11 @@ impl SphereBuilder {
             [val.sin(), val.cos()]
         }
 
-        let u_tab = (0..(self.u_divisions + 1))
+        let u_tab = (0..=self.u_divisions)
             .map(|x| sin_cos(((x % self.u_divisions) as f32) * u_angle))
             .collect::<Vec<[f32; 2]>>();
 
-        let v_tab = (0..(self.v_divisions + 1))
+        let v_tab = (0..=self.v_divisions)
             .map(|x| sin_cos((x as f32) * v_angle))
             .collect::<Vec<[f32; 2]>>();
 
@@ -197,7 +197,7 @@ impl SphereBuilder {
             self.matrix.z.truncate(),
         )
         .invert()
-        .unwrap_or(Matrix3::<f32>::identity())
+        .unwrap_or_else(Matrix3::<f32>::identity)
         .transpose();
 
         // Build vertex array.
@@ -242,7 +242,7 @@ impl SphereBuilder {
                 };
 
                 // Compute face normal
-                let v0 = &verts[indices[offset + 0]];
+                let v0 = &verts[indices[offset]];
                 let v1 = &verts[indices[offset + 1]];
                 let v2 = &verts[indices[offset + 2]];
                 let normal = (v1 - v0).cross(v2 - v0).normalize();
@@ -265,7 +265,7 @@ impl SphereBuilder {
         }
 
         assert!(vertices.len() == total_num_verts);
-        return Ok(vertices);
+        Ok(vertices)
     }
 
     /// Returns the number of caps in the resultant sphere geometry. The current implementation
@@ -314,7 +314,7 @@ pub fn ensure_default_sphere_is_unit_sphere() {
     let vertices = SphereBuilder::new()
         .build_vertices()
         .expect("Failed to build vertices");
-    for ref vertex in vertices {
+    for vertex in &vertices {
         assert_ulps_eq!(Vector3::<f32>::from(vertex.position).magnitude(), 1.0);
     }
 }
@@ -325,8 +325,8 @@ pub fn ensure_default_sphere_has_centroid_at_origin() {
         .build_vertices()
         .expect("Failed to build vertices");
     let mut sum = Vector3::<f32>::zero();
-    for ref vertex in vertices {
-        sum = sum + Vector3::<f32>::from(vertex.position);
+    for vertex in &vertices {
+        sum += Vector3::<f32>::from(vertex.position);
     }
     assert_ulps_eq!(sum, Vector3::<f32>::zero(), epsilon = 0.0001);
 }
@@ -337,7 +337,7 @@ pub fn ensure_default_sphere_has_outward_facing_normals() {
         .scale(2.0, 2.0, 2.0)
         .build_vertices()
         .expect("Failed to build vertices");
-    for ref vertex in vertices {
+    for vertex in &vertices {
         let position = Vector3::<f32>::from(vertex.position);
         let normal = Vector3::<f32>::from(vertex.normal);
         let outside = position + normal;
@@ -353,7 +353,7 @@ pub fn ensure_default_sphere_has_uvs_in_unit_range() {
         .with_divisions(4, 4)
         .build_vertices()
         .expect("Failed to build vertices");
-    for ref vertex in vertices {
+    for vertex in &vertices {
         assert!(vertex.texcoord[0] >= 0.0);
         assert!(vertex.texcoord[1] >= 0.0);
         assert!(vertex.texcoord[0] <= 1.0);
@@ -411,7 +411,7 @@ pub fn ensure_default_sphere_has_planar_quads() {
     for _ in 0..builder.num_slices() {
         for _ in 0..builder.num_vertices_per_slice() / 6 {
             let tri0 = [
-                Vector3::<f32>::from(vertices[index + 0].position),
+                Vector3::<f32>::from(vertices[index].position),
                 Vector3::<f32>::from(vertices[index + 1].position),
                 Vector3::<f32>::from(vertices[index + 2].position),
             ];

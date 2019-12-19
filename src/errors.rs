@@ -22,16 +22,16 @@ pub enum ShapeCreationError {
 
 impl std::error::Error for ShapeCreationError {
     fn description(&self) -> &str {
-        match self {
-            &ShapeCreationError::VertexBufferCreationError(ref err) => err.description(),
-            &ShapeCreationError::NotEnoughDivisionsInU => "Not enough divisions in the u axis",
-            &ShapeCreationError::NotEnoughDivisionsInV => "Not enough divisions in the v axis",
+        match &self {
+            ShapeCreationError::VertexBufferCreationError(ref err) => err.description(),
+            ShapeCreationError::NotEnoughDivisionsInU => "Not enough divisions in the u axis",
+            ShapeCreationError::NotEnoughDivisionsInV => "Not enough divisions in the v axis",
         }
     }
 
     fn cause(&self) -> Option<&dyn Error> {
-        match self {
-            &ShapeCreationError::VertexBufferCreationError(ref error) => Some(error),
+        match &self {
+            ShapeCreationError::VertexBufferCreationError(ref error) => Some(error),
             _ => None,
         }
     }
