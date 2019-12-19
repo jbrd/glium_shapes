@@ -4,8 +4,8 @@ extern crate cgmath;
 extern crate glium;
 
 use self::cgmath::*;
-use errors::ShapeCreationError;
-use vertex::Vertex;
+use crate::errors::ShapeCreationError;
+use crate::vertex::Vertex;
 
 /// A polygonal quad.
 ///

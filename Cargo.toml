@@ -8,6 +8,7 @@ repository = "https://github.com/jbrd/glium_shapes.git"
 homepage = "https://github.com/jbrd/glium_shapes.git"
 documentation = "http://jbrd.github.io/glium_shapes"
 readme = "README.md"
+edition = "2018"
 
 [dependencies]
 approx = "~0.3"
