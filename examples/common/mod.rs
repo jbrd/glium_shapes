@@ -22,14 +22,14 @@ pub struct ExampleData<'a> {
 pub type FrameUniforms<'a> = UniformsStorage<'a, [[f32; 4]; 4], EmptyUniforms>;
 
 /// Setup the glium display and example data and return them both in a tuple.
-pub fn setup<'a>() -> (glium::glutin::EventsLoop, Display, ExampleData<'a>) {
-    let wb = glium::glutin::WindowBuilder::new()
-        .with_dimensions(glium::glutin::dpi::LogicalSize::new(600.0, 600.0))
+pub fn setup<'a>() -> (glium::glutin::event_loop::EventLoop<()>, Display, ExampleData<'a>) {
+    let wb = glium::glutin::window::WindowBuilder::new()
+        .with_inner_size(glium::glutin::dpi::LogicalSize::new(600.0, 600.0))
         .with_title("Example Viewer");
 
     let cb = glium::glutin::ContextBuilder::new().with_depth_buffer(16);
 
-    let ev = glium::glutin::EventsLoop::new();
+    let ev = glium::glutin::event_loop::EventLoop::new();
     let display = glium::Display::new(wb, cb, &ev).expect("Failed to build glium display");
 
     let data = ExampleData {
@@ -82,16 +82,15 @@ pub fn setup<'a>() -> (glium::glutin::EventsLoop, Display, ExampleData<'a>) {
 
 /// Process any pending events in the glium display. Return true if the
 /// display is still open, or false if the user has closed the display.
-pub fn process_events(ev: &mut glium::glutin::EventsLoop) -> bool {
-    let mut result = true;
-    ev.poll_events(|event| {
-        if let glium::glutin::Event::WindowEvent { ref event, .. } = event {
-            if let glium::glutin::WindowEvent::CloseRequested = event {
-                result = false;
-            }
+pub fn process_events(event: &glium::glutin::event::Event<()>, control_flow: &mut glium::glutin::event_loop::ControlFlow) -> bool {
+    *control_flow = glium::glutin::event_loop::ControlFlow::Poll;
+    if let glium::glutin::event::Event::WindowEvent { ref event, .. } = event {
+        if let glium::glutin::event::WindowEvent::CloseRequested = event {
+            *control_flow = glium::glutin::event_loop::ControlFlow::Exit;
+            return false;
         }
-    });
-    result
+    }
+    return true;
 }
 
 /// Called before rendering a frame. Returns the glium frame and the
