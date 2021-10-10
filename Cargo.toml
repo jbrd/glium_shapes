@@ -13,4 +13,4 @@ edition = "2018"
 [dependencies]
 approx = "~0.3"
 cgmath = "~0.17"
-glium = "~0.25"
+glium = "~0.30.2"

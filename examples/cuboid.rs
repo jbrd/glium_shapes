@@ -5,7 +5,7 @@ use glium::Surface;
 
 fn main() {
     // Setup glium display and shared example data (program, uniforms, draw params, etc)
-    let (mut ev, display, data) = common::setup();
+    let (ev, display, data) = common::setup();
 
     // KEY POINT: Use a CuboidBuilder to build a new cuboid.
     // Use the methods on the builder object to customise the resultant
@@ -18,23 +18,25 @@ fn main() {
         .expect("Failed to build cuboid shape");
 
     // Loop until the user closes the display window.
-    while common::process_events(&mut ev) {
-        // Begin a new frame.
-        let (mut frame, uniforms) = common::begin_frame(&display);
+    ev.run(move |event, _, control_flow| {
+        if common::process_events(&event, control_flow) {
+            // Begin a new frame.
+            let (mut frame, uniforms) = common::begin_frame(&display);
 
-        // KEY POINT: Draw the cuboid shape by passing it as a source
-        // of both vertices and indices to glium.
-        frame
-            .draw(
-                &cuboid,
-                &cuboid,
-                &data.program,
-                &uniforms,
-                &data.draw_params,
-            )
-            .expect("Failed to draw cuboid shape");
+            // KEY POINT: Draw the cuboid shape by passing it as a source
+            // of both vertices and indices to glium.
+            frame
+                .draw(
+                    &cuboid,
+                    &cuboid,
+                    &data.program,
+                    &uniforms,
+                    &data.draw_params,
+                )
+                .expect("Failed to draw cuboid shape");
 
-        // Finish the frame.
-        common::end_frame(frame);
-    }
+            // Finish the frame.
+            common::end_frame(frame);
+        }
+    });
 }
